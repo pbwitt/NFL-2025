@@ -1,0 +1,12 @@
+
+---
+
+## Quick Start
+
+### 0) Environment
+```bash
+# (recommended) new venv or conda env
+python -m venv .venv && source .venv/bin/activate
+# or: conda create -n nfl-2025 python=3.11 -y && conda activate nfl-2025
+
+pip install -r requirements.txt

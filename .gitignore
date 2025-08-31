@@ -1,0 +1,16 @@
+# Data & predictions
+data/*.parquet
+data/*.csv
+preds/*.csv
+nfl_*dump*/
+*.log
+
+# Python cruft
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.env
+
+# OS files
+.DS_Store
