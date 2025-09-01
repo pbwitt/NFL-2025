@@ -1,16 +1,26 @@
-# Data & predictions
-data/*.parquet
-data/*.csv
-preds/*.csv
-nfl_*dump*/
-*.log
-
-# Python cruft
+# python
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
 .venv/
 .env
+.env.*
 
-# OS files
+# macOS & editors
 .DS_Store
+.vscode/
+.idea/
+
+# build artifacts
+site/
+docs/*.map
+
+# raw data & intermediates (published site has data.json already)
+data/**
+!data/.gitkeep
+
+# allow models if you want to version them (uncomment next lines):
+#!data/models/
+#!data/models/**
+
+# notebooks
+.ipynb_checkpoints/
