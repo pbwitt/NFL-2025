@@ -15,14 +15,14 @@ BetRivers,player_pass_yds,Daniel Jones,201.5,1.87,1.87
 Caesars,player_pass_yds,Daniel Jones,197.5,1.74,2.05
 DraftKings,player_pass_yds,Daniel Jones,198.5,1.88,1.9
 FanDuel,player_pass_yds,Daniel Jones,197.5,1.88,1.88
-Fanatics,player_pass_yds,Daniel Jones,200.5,1.91,1.83
+Fanatics,player_pass_yds,Daniel Jones,195.5,1.87,1.87
 BetMGM,player_pass_yds,Tua Tagovailoa,254.5,1.87,1.87
 BetOnline.ag,player_pass_yds,Tua Tagovailoa,243.5,1.88,1.88
 BetRivers,player_pass_yds,Tua Tagovailoa,248.5,1.88,1.87
 Caesars,player_pass_yds,Tua Tagovailoa,243.5,1.83,1.91
 DraftKings,player_pass_yds,Tua Tagovailoa,250.5,1.89,1.89
 FanDuel,player_pass_yds,Tua Tagovailoa,243.5,1.88,1.88
-Fanatics,player_pass_yds,Tua Tagovailoa,240.5,1.83,1.91
+Fanatics,player_pass_yds,Tua Tagovailoa,240.5,1.87,1.87
 FanDuel,player_receptions,De'Von Achane,4.5,1.94,1.8
 Fanatics,player_receptions,De'Von Achane,4.5,1.95,1.8
 BetMGM,player_receptions,Jaylen Waddle,4.5,1.77,2.0
@@ -42,7 +42,7 @@ BetOnline.ag,player_receptions,Tyreek Hill,5.5,1.77,2.01
 BetRivers,player_receptions,Tyreek Hill,5.5,1.73,2.02
 DraftKings,player_receptions,Tyreek Hill,5.5,1.77,2.02
 FanDuel,player_receptions,Tyreek Hill,5.5,1.76,2.0
-Fanatics,player_receptions,Tyreek Hill,6.5,2.4,1.56
+Fanatics,player_receptions,Tyreek Hill,6.5,2.45,1.53
 BetMGM,player_rush_yds,Daniel Jones,24.5,2.0,1.74
 BetOnline.ag,player_rush_yds,Daniel Jones,22.5,1.92,1.84
 BetRivers,player_rush_yds,Daniel Jones,20.5,1.87,1.87
@@ -55,7 +55,7 @@ BetOnline.ag,player_rush_yds,De'Von Achane,62.5,1.9,1.86
 BetRivers,player_rush_yds,De'Von Achane,61.5,1.87,1.87
 DraftKings,player_rush_yds,De'Von Achane,62.5,1.89,1.89
 FanDuel,player_rush_yds,De'Von Achane,61.5,1.88,1.88
-Fanatics,player_rush_yds,De'Von Achane,60.5,1.83,1.91
+Fanatics,player_rush_yds,De'Von Achane,60.5,1.87,1.87
 BetMGM,player_rush_yds,Jonathan Taylor,79.5,1.87,1.87
 BetRivers,player_rush_yds,Jonathan Taylor,77.5,1.88,1.85
 Caesars,player_rush_yds,Jonathan Taylor,79.5,1.87,1.87
