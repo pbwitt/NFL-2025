@@ -1,61 +1,131 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>NFL-2025 — Weekly Edges</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NFL-2025 — Models, Predictions & Player Props</title>
+  <meta name="description" content="NFL-2025: Elo-based game predictions plus live player props. How the models work, how to read them, and links to each page." />
+  <style>
+    :root {
+      --bg: #f7f8fc; --card:#fff; --ink:#0b1020; --muted:#667085; --line:#e9edf5; --brand:#0d6efd;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--ink);
+                 font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, Arial; }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px 64px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0 16px; }
+    .brand { font-weight: 700; font-size: 18px; }
+    nav { display:flex; gap:10px; flex-wrap: wrap; }
+    .btn { display:inline-block; background:#eef4ff; color:#122; padding:8px 12px; border-radius:999px; font-weight:600; border:1px solid #d7e3ff; }
+    .btn.primary { background: var(--brand); color:#fff; border-color: var(--brand); }
+    .hero { margin: 12px 0 20px; padding: 18px; background:linear-gradient(180deg,#ffffff, #f1f5ff); border:1px solid var(--line); border-radius: 16px; }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(24px, 3.5vw, 36px); line-height:1.15; }
+    .sub { color:var(--muted); }
+    .grid { display:grid; gap:16px; grid-template-columns: 1fr; }
+    @media (min-width: 780px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+    .card h2 { margin:0 0 6px; font-size:20px; }
+    .card .muted { color:var(--muted); font-size:14px; margin-bottom:6px; }
+    .list { margin: 10px 0 0; padding-left: 18px; }
+    .pill { display:inline-block; background:#eef4ff; color:#234; font-size:12px; padding:2px 8px; border-radius:999px; margin-left:8px; }
+    .footer { margin-top:22px; color:var(--muted); font-size:13px; }
+    .cards-3 { display:grid; gap:16px; grid-template-columns: 1fr; }
+    @media (min-width: 980px) { .cards-3 { grid-template-columns: repeat(3, 1fr); } }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background:#f2f4f7; border:1px solid #e5e7eb; padding:1px 6px; border-radius:6px; font-size: 12px; }
+    .navrow { display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+  </style>
 </head>
 <body>
-<header>
-  <h1>🏈 NFL-2025 — Weekly Edges</h1>
-  <div id="meta"></div>
-  <div class="controls">
-    <label>Market
-      <select id="market">
-        <option value="">All</option>
-        <option value="h2h">Moneyline</option>
-        <option value="spreads">Spread</option>
-        <option value="totals">Total</option>
-      </select>
-    </label>
-    <label>Book
-      <select id="book"></select>
-    </label>
-    <label>Min edge
-      <input id="minEdge" type="number" step="0.1" value="1.0">
-      <select id="edgeUnit">
-        <option value="pct">%</option>
-        <option value="pts">pts</option>
-      </select>
-    </label>
-    <button id="copyLink">Copy Sharable Link</button>
+  <div class="wrap">
+    <header>
+      <div class="brand">NFL-2025</div>
+      <nav>
+        <a class="btn" href="./edges/">Game Predictions</a>
+        <a class="btn" href="./props/">Player Props</a>
+        <a class="btn" href="#how-to-read">How To Read</a>
+        <a class="btn" href="#models">Models</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Predictions & Player Props, updated weekly</h1>
+      <div class="sub">Machine-learned game edges from Elo-driven features, plus live bookmaker player props.</div>
+      <div class="navrow">
+        <a class="btn primary" href="./edges/">View Game Predictions</a>
+        <a class="btn" href="./props/">View Player Props</a>
+      </div>
+    </section>
+
+    <section id="models" class="grid">
+      <article class="card">
+        <h2>Model Selection<span class="pill">Why these</span></h2>
+        <div class="muted">We benchmarked simple baselines against flexible learners to balance accuracy and transparency.</div>
+        <ul class="list">
+          <li><strong>Elo Baseline:</strong> canonical team strength model; updates each game.</li>
+          <li><strong>Logistic Regression:</strong> interpretable win-probabilities; good calibration.</li>
+          <li><strong>Gradient Boosting:</strong> handles feature interactions; higher AUC on holdout.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Feature Set<span class="pill">Examples</span></h2>
+        <div class="muted">Representative signals that feed the models (exact counts vary by release).</div>
+        <ul class="list">
+          <li>Team Elo (pre/post), opponent Elo, home-field flag.</li>
+          <li>Off/Def efficiency splits (pass, rush), EPA/play, success rate.</li>
+          <li>Injury proxies, rest days, travel distance/time zones.</li>
+          <li>Weather snapshot, pace, penalties, turnover margin.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="cards-3" id="how-it-works">
+      <article class="card">
+        <h2>How It Works</h2>
+        <div class="muted">From data to decisions in a weekly pipeline.</div>
+        <ul class="list">
+          <li><strong>Data</strong> → team/game stats + schedule (nfl_data_py) and live odds (The Odds API).</li>
+          <li><strong>Train</strong> → fit Elo & ML models on prior seasons; validate on rolling windows.</li>
+          <li><strong>Predict</strong> → win% and expected margin for each matchup.</li>
+          <li><strong>Publish</strong> → static site in <span class="kbd">docs/</span> via GitHub Pages.</li>
+        </ul>
+      </article>
+
+      <article class="card" id="how-to-read">
+        <h2>How to Read Game Predictions</h2>
+        <div class="muted">Interpreting model outputs vs bookmaker numbers.</div>
+        <ul class="list">
+          <li><strong>Model Win %</strong> — predicted win probability for each team.</li>
+          <li><strong>Implied Win %</strong> — bookmaker odds converted to probability.</li>
+          <li><strong>Elo Edge</strong> — Model Win % − Implied Win %. Positive = model lean.</li>
+          <li><strong>Error Tracking</strong> — after games, compare to actuals to monitor calibration.</li>
+        </ul>
+        <div class="navrow"><a class="btn" href="./edges/">Open Game Predictions</a></div>
+      </article>
+
+      <article class="card">
+        <h2>How to Read Player Props</h2>
+        <div class="muted">Each row is a posted Over/Under line from a bookmaker.</div>
+        <ul class="list">
+          <li><strong>Line</strong> — the posted threshold (e.g., 265.5 pass yds).</li>
+          <li><strong>Over / Under</strong> — decimal prices; convert to prob via 1/price.</li>
+          <li><strong>Compare to Projection</strong> — if our projection &gt; line → Over lean (and vice-versa).</li>
+          <li><strong>Coverage</strong> — props appear 24–72h pre-kickoff; some games may show “not posted yet.”</li>
+        </ul>
+        <div class="navrow"><a class="btn" href="./props/">Open Player Props</a></div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Navigating the Site</h2>
+      <ul class="list">
+        <li><a href="./edges/">Game Predictions</a> — Elo & ML outputs with edges vs implied.</li>
+        <li><a href="./props/">Player Props</a> — live Over/Under lines with per-game CSVs.</li>
+      </ul>
+      <div class="footer">Last updated when pages were built locally and pushed to GitHub Pages.</div>
+    </section>
   </div>
-</header>
-
-<main>
-  <table id="edges">
-    <thead>
-      <tr>
-        <th>Kickoff (ET)</th>
-        <th>Matchup</th>
-        <th>Market</th>
-        <th>Side</th>
-        <th>Line</th>
-        <th>Price</th>
-        <th>Book</th>
-        <th>Model</th>
-        <th>Edge</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</main>
-
-<footer>
-  <p>Manual refresh each week. Edges are model vs market; not betting advice.</p>
-</footer>
-<script src="./app.js"></script>
 </body>
 </html>

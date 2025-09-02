@@ -1,0 +1,88 @@
+bookmaker,market,player,line,over,under
+BetMGM,player_pass_tds,Brock Purdy,1.5,1.83,1.91
+BetOnline.ag,player_pass_tds,Brock Purdy,1.5,1.77,2.0
+BetRivers,player_pass_tds,Brock Purdy,1.5,1.88,1.85
+DraftKings,player_pass_tds,Brock Purdy,1.5,1.78,2.01
+FanDuel,player_pass_tds,Brock Purdy,1.5,1.77,1.98
+BetMGM,player_pass_tds,Sam Darnold,1.5,2.45,1.53
+BetOnline.ag,player_pass_tds,Sam Darnold,1.5,2.3,1.59
+BetRivers,player_pass_tds,Sam Darnold,1.5,2.4,1.54
+DraftKings,player_pass_tds,Sam Darnold,1.5,2.46,1.53
+FanDuel,player_pass_tds,Sam Darnold,1.5,2.24,1.6
+BetMGM,player_pass_yds,Brock Purdy,245.5,1.87,1.87
+BetOnline.ag,player_pass_yds,Brock Purdy,243.5,1.88,1.88
+BetRivers,player_pass_yds,Brock Purdy,238.5,1.88,1.85
+Caesars,player_pass_yds,Brock Purdy,243.5,2.0,1.77
+DraftKings,player_pass_yds,Brock Purdy,240.5,1.88,1.9
+FanDuel,player_pass_yds,Brock Purdy,243.5,1.88,1.88
+Fanatics,player_pass_yds,Brock Purdy,245.5,1.91,1.83
+BetMGM,player_pass_yds,Sam Darnold,199.5,1.87,1.87
+BetOnline.ag,player_pass_yds,Sam Darnold,204.5,1.84,1.92
+BetRivers,player_pass_yds,Sam Darnold,204.5,1.85,1.88
+Caesars,player_pass_yds,Sam Darnold,205.5,1.91,1.83
+DraftKings,player_pass_yds,Sam Darnold,204.5,1.88,1.9
+FanDuel,player_pass_yds,Sam Darnold,205.5,1.88,1.88
+Fanatics,player_pass_yds,Sam Darnold,205.5,1.87,1.87
+BetMGM,player_receptions,AJ Barner,1.5,1.53,2.4
+BetMGM,player_receptions,Christian McCaffrey,4.5,2.0,1.74
+BetOnline.ag,player_receptions,Christian McCaffrey,4.5,2.06,1.73
+BetRivers,player_receptions,Christian McCaffrey,4.5,1.96,1.78
+DraftKings,player_receptions,Christian McCaffrey,4.5,2.04,1.76
+FanDuel,player_receptions,Christian McCaffrey,4.5,2.06,1.71
+Fanatics,player_receptions,Christian McCaffrey,4.5,2.05,1.71
+BetMGM,player_receptions,Cooper Kupp,3.5,1.8,1.95
+BetOnline.ag,player_receptions,Cooper Kupp,3.5,1.94,1.82
+BetRivers,player_receptions,Cooper Kupp,3.5,1.78,1.96
+DraftKings,player_receptions,Cooper Kupp,3.5,1.96,1.81
+FanDuel,player_receptions,Cooper Kupp,3.5,1.93,1.82
+Fanatics,player_receptions,Cooper Kupp,3.5,1.95,1.8
+BetMGM,player_receptions,George Kittle,4.5,1.74,2.0
+BetOnline.ag,player_receptions,George Kittle,4.5,1.68,2.14
+BetRivers,player_receptions,George Kittle,5.5,2.23,1.61
+DraftKings,player_receptions,George Kittle,4.5,1.65,2.2
+FanDuel,player_receptions,George Kittle,4.5,1.69,2.08
+Fanatics,player_receptions,George Kittle,5.5,2.4,1.56
+BetMGM,player_receptions,Jaxon Smith-Njigba,5.5,2.05,1.71
+BetOnline.ag,player_receptions,Jaxon Smith-Njigba,5.5,2.12,1.69
+BetRivers,player_receptions,Jaxon Smith-Njigba,5.5,2.0,1.75
+DraftKings,player_receptions,Jaxon Smith-Njigba,5.5,2.12,1.7
+FanDuel,player_receptions,Jaxon Smith-Njigba,4.5,1.6,2.26
+Fanatics,player_receptions,Jaxon Smith-Njigba,5.5,2.2,1.62
+BetMGM,player_receptions,Kenneth Walker III,2.5,2.0,1.77
+BetMGM,player_receptions,Tory Horton,2.5,1.95,1.8
+BetMGM,player_receptions,Zach Charbonnet,1.5,2.15,1.65
+BetMGM,player_rush_yds,Brock Purdy,12.5,1.91,1.85
+BetOnline.ag,player_rush_yds,Brock Purdy,12.5,1.88,1.88
+BetRivers,player_rush_yds,Brock Purdy,12.5,1.88,1.87
+Caesars,player_rush_yds,Brock Purdy,12.5,1.83,1.91
+DraftKings,player_rush_yds,Brock Purdy,12.5,1.92,1.86
+FanDuel,player_rush_yds,Brock Purdy,12.5,1.88,1.88
+Fanatics,player_rush_yds,Brock Purdy,10.5,1.77,2.0
+BetMGM,player_rush_yds,Christian McCaffrey,70.5,1.87,1.87
+BetOnline.ag,player_rush_yds,Christian McCaffrey,73.5,1.89,1.87
+BetRivers,player_rush_yds,Christian McCaffrey,70.5,1.88,1.85
+Caesars,player_rush_yds,Christian McCaffrey,72.5,1.8,1.95
+DraftKings,player_rush_yds,Christian McCaffrey,73.5,1.91,1.87
+FanDuel,player_rush_yds,Christian McCaffrey,72.5,1.88,1.88
+Fanatics,player_rush_yds,Christian McCaffrey,70.5,1.83,1.91
+BetMGM,player_rush_yds,Kenneth Walker III,63.5,1.87,1.87
+BetOnline.ag,player_rush_yds,Kenneth Walker III,62.5,1.88,1.88
+BetRivers,player_rush_yds,Kenneth Walker III,63.5,1.88,1.85
+Caesars,player_rush_yds,Kenneth Walker III,64.5,1.91,1.83
+DraftKings,player_rush_yds,Kenneth Walker III,63.5,1.89,1.89
+FanDuel,player_rush_yds,Kenneth Walker III,64.5,1.88,1.88
+Fanatics,player_rush_yds,Kenneth Walker III,65.5,1.87,1.87
+BetMGM,player_rush_yds,Sam Darnold,9.5,1.95,1.8
+BetOnline.ag,player_rush_yds,Sam Darnold,9.5,1.86,1.9
+BetRivers,player_rush_yds,Sam Darnold,8.5,1.82,1.92
+Caesars,player_rush_yds,Sam Darnold,9.5,1.8,1.95
+DraftKings,player_rush_yds,Sam Darnold,8.5,1.93,1.85
+FanDuel,player_rush_yds,Sam Darnold,9.5,1.88,1.88
+Fanatics,player_rush_yds,Sam Darnold,10.5,1.91,1.83
+BetMGM,player_rush_yds,Zach Charbonnet,28.5,1.83,1.91
+BetOnline.ag,player_rush_yds,Zach Charbonnet,29.5,1.85,1.91
+BetRivers,player_rush_yds,Zach Charbonnet,30.5,1.85,1.88
+Caesars,player_rush_yds,Zach Charbonnet,31.5,1.87,1.87
+DraftKings,player_rush_yds,Zach Charbonnet,29.5,1.88,1.91
+FanDuel,player_rush_yds,Zach Charbonnet,31.5,1.88,1.88
+Fanatics,player_rush_yds,Zach Charbonnet,30.5,1.83,1.91

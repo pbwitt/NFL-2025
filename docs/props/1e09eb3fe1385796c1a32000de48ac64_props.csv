@@ -1,0 +1,89 @@
+bookmaker,market,player,line,over,under
+BetMGM,player_pass_tds,Baker Mayfield,1.5,1.77,2.0
+BetRivers,player_pass_tds,Baker Mayfield,1.5,1.64,2.17
+DraftKings,player_pass_tds,Baker Mayfield,1.5,1.72,2.09
+FanDuel,player_pass_tds,Baker Mayfield,1.5,1.69,2.08
+BetMGM,player_pass_tds,Michael Penix Jr.,1.5,2.1,1.69
+BetOnline.ag,player_pass_tds,Michael Penix Jr.,1.5,2.22,1.63
+BetRivers,player_pass_tds,Michael Penix Jr.,1.5,2.14,1.67
+DraftKings,player_pass_tds,Michael Penix Jr.,1.5,2.16,1.67
+FanDuel,player_pass_tds,Michael Penix Jr.,1.5,2.24,1.6
+BetMGM,player_pass_yds,Baker Mayfield,239.5,1.87,1.87
+BetRivers,player_pass_yds,Baker Mayfield,242.5,1.85,1.88
+Caesars,player_pass_yds,Baker Mayfield,239.5,1.87,1.87
+DraftKings,player_pass_yds,Baker Mayfield,241.5,1.89,1.89
+FanDuel,player_pass_yds,Baker Mayfield,239.5,1.88,1.88
+Fanatics,player_pass_yds,Baker Mayfield,240.5,1.87,1.87
+BetMGM,player_pass_yds,Michael Penix Jr.,232.5,1.87,1.87
+BetOnline.ag,player_pass_yds,Michael Penix Jr.,234.5,1.89,1.87
+BetRivers,player_pass_yds,Michael Penix Jr.,230.5,1.85,1.88
+Caesars,player_pass_yds,Michael Penix Jr.,233.5,1.83,1.91
+DraftKings,player_pass_yds,Michael Penix Jr.,236.5,1.88,1.9
+FanDuel,player_pass_yds,Michael Penix Jr.,233.5,1.88,1.88
+Fanatics,player_pass_yds,Michael Penix Jr.,230.5,1.83,1.91
+BetMGM,player_receptions,Bijan Robinson,3.5,2.1,1.67
+BetOnline.ag,player_receptions,Bijan Robinson,3.5,2.09,1.71
+BetRivers,player_receptions,Bijan Robinson,3.5,2.05,1.72
+DraftKings,player_receptions,Bijan Robinson,3.5,2.0,1.79
+FanDuel,player_receptions,Bijan Robinson,3.5,2.14,1.66
+Fanatics,player_receptions,Bijan Robinson,3.5,2.15,1.67
+BetMGM,player_receptions,Bucky Irving,3.5,2.35,1.54
+BetOnline.ag,player_receptions,Bucky Irving,3.5,2.3,1.59
+BetRivers,player_receptions,Bucky Irving,3.5,2.35,1.56
+DraftKings,player_receptions,Bucky Irving,3.5,2.26,1.62
+FanDuel,player_receptions,Bucky Irving,2.5,1.63,2.18
+Fanatics,player_receptions,Bucky Irving,3.5,2.4,1.56
+BetMGM,player_receptions,Cade Otton,3.5,2.15,1.65
+BetMGM,player_receptions,Drake London,6.5,2.15,1.67
+BetOnline.ag,player_receptions,Drake London,6.5,2.04,1.74
+BetRivers,player_receptions,Drake London,6.5,2.02,1.74
+DraftKings,player_receptions,Drake London,6.5,2.03,1.79
+FanDuel,player_receptions,Drake London,5.5,1.58,2.28
+Fanatics,player_receptions,Drake London,6.5,2.05,1.71
+BetMGM,player_receptions,Emeka Egbuka,4.5,1.53,2.4
+BetOnline.ag,player_receptions,Emeka Egbuka,5.5,2.07,1.72
+BetRivers,player_receptions,Emeka Egbuka,5.5,2.12,1.68
+DraftKings,player_receptions,Emeka Egbuka,5.5,2.13,1.69
+FanDuel,player_receptions,Emeka Egbuka,4.5,1.49,2.52
+Fanatics,player_receptions,Emeka Egbuka,5.5,2.0,1.74
+BetMGM,player_receptions,Kyle Pitts,3.5,2.0,1.74
+BetOnline.ag,player_receptions,Kyle Pitts,3.5,2.0,1.77
+BetRivers,player_receptions,Kyle Pitts,3.5,2.0,1.76
+DraftKings,player_receptions,Kyle Pitts,3.5,1.93,1.85
+FanDuel,player_receptions,Kyle Pitts,3.5,1.98,1.77
+Fanatics,player_receptions,Kyle Pitts,3.5,2.05,1.71
+BetMGM,player_receptions,Mike Evans,5.5,1.83,1.91
+BetOnline.ag,player_receptions,Mike Evans,5.5,1.77,2.0
+BetRivers,player_receptions,Mike Evans,5.5,1.87,1.87
+DraftKings,player_receptions,Mike Evans,5.5,1.72,2.08
+FanDuel,player_receptions,Mike Evans,5.5,1.78,1.96
+Fanatics,player_receptions,Mike Evans,5.5,1.8,1.95
+BetMGM,player_receptions,Rachaad White,1.5,1.53,2.4
+BetMGM,player_rush_yds,Baker Mayfield,11.5,1.83,1.91
+BetRivers,player_rush_yds,Baker Mayfield,11.5,1.82,1.92
+Caesars,player_rush_yds,Baker Mayfield,11.5,1.83,1.91
+DraftKings,player_rush_yds,Baker Mayfield,12.5,1.93,1.86
+BetMGM,player_rush_yds,Bijan Robinson,75.5,1.87,1.87
+BetOnline.ag,player_rush_yds,Bijan Robinson,79.5,1.85,1.91
+BetRivers,player_rush_yds,Bijan Robinson,76.5,1.85,1.88
+Caesars,player_rush_yds,Bijan Robinson,79.5,1.87,1.87
+DraftKings,player_rush_yds,Bijan Robinson,81.5,1.9,1.88
+FanDuel,player_rush_yds,Bijan Robinson,78.5,1.88,1.88
+Fanatics,player_rush_yds,Bijan Robinson,80.5,1.91,1.83
+BetMGM,player_rush_yds,Bucky Irving,69.5,1.87,1.87
+BetOnline.ag,player_rush_yds,Bucky Irving,70.5,1.88,1.88
+BetRivers,player_rush_yds,Bucky Irving,70.5,1.87,1.87
+Caesars,player_rush_yds,Bucky Irving,70.5,1.8,1.95
+DraftKings,player_rush_yds,Bucky Irving,70.5,1.92,1.87
+FanDuel,player_rush_yds,Bucky Irving,70.5,1.88,1.88
+Fanatics,player_rush_yds,Bucky Irving,70.5,1.87,1.87
+BetMGM,player_rush_yds,Michael Penix Jr.,3.5,1.83,1.91
+BetOnline.ag,player_rush_yds,Michael Penix Jr.,3.5,1.88,1.88
+BetMGM,player_rush_yds,Rachaad White,18.5,2.0,1.77
+BetMGM,player_rush_yds,Tyler Allgeier,22.5,1.8,1.95
+BetOnline.ag,player_rush_yds,Tyler Allgeier,22.5,1.88,1.88
+BetRivers,player_rush_yds,Tyler Allgeier,23.5,1.89,1.83
+Caesars,player_rush_yds,Tyler Allgeier,23.5,1.8,1.95
+DraftKings,player_rush_yds,Tyler Allgeier,24.5,1.89,1.89
+FanDuel,player_rush_yds,Tyler Allgeier,22.5,1.88,1.88
+Fanatics,player_rush_yds,Tyler Allgeier,20.5,1.8,1.95

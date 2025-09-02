@@ -1,0 +1,120 @@
+bookmaker,market,player,line,over,under
+BetMGM,player_pass_tds,Bryce Young,1.5,2.45,1.5
+BetOnline.ag,player_pass_tds,Bryce Young,1.5,2.44,1.53
+BetRivers,player_pass_tds,Bryce Young,1.5,2.4,1.53
+DraftKings,player_pass_tds,Bryce Young,1.5,2.39,1.56
+FanDuel,player_pass_tds,Bryce Young,1.5,2.46,1.51
+BetMGM,player_pass_tds,Trevor Lawrence,1.5,1.83,1.91
+BetOnline.ag,player_pass_tds,Trevor Lawrence,1.5,1.93,1.83
+BetRivers,player_pass_tds,Trevor Lawrence,1.5,1.88,1.85
+DraftKings,player_pass_tds,Trevor Lawrence,1.5,1.97,1.81
+FanDuel,player_pass_tds,Trevor Lawrence,1.5,1.89,1.85
+BetMGM,player_pass_yds,Bryce Young,210.5,1.87,1.87
+BetOnline.ag,player_pass_yds,Bryce Young,214.5,1.89,1.87
+BetRivers,player_pass_yds,Bryce Young,214.5,1.87,1.87
+Caesars,player_pass_yds,Bryce Young,213.5,1.83,1.91
+DraftKings,player_pass_yds,Bryce Young,216.5,1.88,1.9
+FanDuel,player_pass_yds,Bryce Young,213.5,1.88,1.88
+Fanatics,player_pass_yds,Bryce Young,210.5,1.83,1.91
+BetMGM,player_pass_yds,Trevor Lawrence,240.5,1.87,1.87
+BetOnline.ag,player_pass_yds,Trevor Lawrence,239.5,1.86,1.9
+BetRivers,player_pass_yds,Trevor Lawrence,241.5,1.88,1.85
+Caesars,player_pass_yds,Trevor Lawrence,239.5,1.87,1.87
+DraftKings,player_pass_yds,Trevor Lawrence,240.5,1.88,1.9
+FanDuel,player_pass_yds,Trevor Lawrence,239.5,1.88,1.88
+Fanatics,player_pass_yds,Trevor Lawrence,240.5,1.87,1.87
+BetMGM,player_receptions,Brenton Strange,2.5,1.54,2.35
+BetOnline.ag,player_receptions,Brenton Strange,3.5,2.26,1.61
+BetRivers,player_receptions,Brenton Strange,2.5,1.56,2.3
+DraftKings,player_receptions,Brenton Strange,2.5,1.62,2.25
+FanDuel,player_receptions,Brenton Strange,2.5,1.56,2.34
+Fanatics,player_receptions,Brenton Strange,3.5,2.15,1.67
+BetMGM,player_receptions,Brian Thomas Jr,5.5,1.87,1.87
+BetOnline.ag,player_receptions,Brian Thomas Jr,5.5,1.98,1.79
+BetRivers,player_receptions,Brian Thomas Jr,5.5,1.87,1.87
+DraftKings,player_receptions,Brian Thomas Jr,5.5,1.95,1.82
+FanDuel,player_receptions,Brian Thomas Jr,5.5,1.98,1.77
+Fanatics,player_receptions,Brian Thomas Jr,5.5,1.95,1.8
+BetMGM,player_receptions,Chuba Hubbard,1.5,1.61,2.25
+DraftKings,player_receptions,Chuba Hubbard,1.5,1.66,2.19
+FanDuel,player_receptions,Chuba Hubbard,2.5,2.48,1.5
+Fanatics,player_receptions,Chuba Hubbard,2.5,2.5,1.5
+BetMGM,player_receptions,Dyami Brown,2.5,2.4,1.53
+BetOnline.ag,player_receptions,Dyami Brown,2.5,2.41,1.54
+BetRivers,player_receptions,Dyami Brown,2.5,2.38,1.54
+DraftKings,player_receptions,Dyami Brown,2.5,2.48,1.53
+FanDuel,player_receptions,Dyami Brown,2.5,2.44,1.52
+Fanatics,player_receptions,Dyami Brown,2.5,2.4,1.56
+BetMGM,player_receptions,Parker Washington,1.5,1.95,1.8
+BetOnline.ag,player_receptions,Parker Washington,1.5,2.03,1.75
+BetRivers,player_receptions,Parker Washington,1.5,1.91,1.83
+DraftKings,player_receptions,Parker Washington,1.5,1.99,1.79
+FanDuel,player_receptions,Parker Washington,1.5,2.02,1.74
+Fanatics,player_receptions,Parker Washington,1.5,2.05,1.71
+BetMGM,player_receptions,Tetairoa McMillan,5.5,2.05,1.71
+BetOnline.ag,player_receptions,Tetairoa McMillan,5.5,2.1,1.7
+BetRivers,player_receptions,Tetairoa McMillan,5.5,2.14,1.66
+DraftKings,player_receptions,Tetairoa McMillan,5.5,2.0,1.78
+FanDuel,player_receptions,Tetairoa McMillan,4.5,1.58,2.28
+Fanatics,player_receptions,Tetairoa McMillan,5.5,2.2,1.62
+BetMGM,player_receptions,Travis Etienne Jr.,2.5,2.15,1.67
+BetOnline.ag,player_receptions,Travis Etienne Jr.,2.5,2.13,1.68
+BetRivers,player_receptions,Travis Etienne Jr.,2.5,2.17,1.64
+DraftKings,player_receptions,Travis Etienne Jr.,2.5,2.14,1.68
+FanDuel,player_receptions,Travis Etienne Jr.,2.5,2.16,1.65
+Fanatics,player_receptions,Travis Etienne Jr.,2.5,2.1,1.69
+BetMGM,player_receptions,Travis Hunter,4.5,2.1,1.69
+BetOnline.ag,player_receptions,Travis Hunter,4.5,2.18,1.65
+BetRivers,player_receptions,Travis Hunter,4.5,2.1,1.7
+DraftKings,player_receptions,Travis Hunter,4.5,2.19,1.66
+FanDuel,player_receptions,Travis Hunter,4.5,2.18,1.63
+Fanatics,player_receptions,Travis Hunter,4.5,2.2,1.62
+BetMGM,player_receptions,Xavier Legette,3.5,2.0,1.77
+BetOnline.ag,player_receptions,Xavier Legette,3.5,2.15,1.67
+BetRivers,player_receptions,Xavier Legette,3.5,2.02,1.73
+DraftKings,player_receptions,Xavier Legette,3.5,2.05,1.75
+FanDuel,player_receptions,Xavier Legette,3.5,2.18,1.63
+Fanatics,player_receptions,Xavier Legette,3.5,2.2,1.62
+BetMGM,player_rush_yds,Bryce Young,15.5,1.91,1.85
+BetOnline.ag,player_rush_yds,Bryce Young,16.5,1.86,1.9
+BetRivers,player_rush_yds,Bryce Young,15.5,1.82,1.92
+Caesars,player_rush_yds,Bryce Young,16.5,1.83,1.91
+DraftKings,player_rush_yds,Bryce Young,14.5,1.94,1.85
+FanDuel,player_rush_yds,Bryce Young,16.5,1.88,1.88
+Fanatics,player_rush_yds,Bryce Young,15.5,1.83,1.91
+BetMGM,player_rush_yds,Chuba Hubbard,62.5,1.91,1.85
+BetOnline.ag,player_rush_yds,Chuba Hubbard,61.5,1.86,1.9
+BetRivers,player_rush_yds,Chuba Hubbard,61.5,1.85,1.88
+Caesars,player_rush_yds,Chuba Hubbard,61.5,1.83,1.91
+DraftKings,player_rush_yds,Chuba Hubbard,60.5,1.88,1.9
+FanDuel,player_rush_yds,Chuba Hubbard,61.5,1.88,1.88
+Fanatics,player_rush_yds,Chuba Hubbard,60.5,1.87,1.87
+BetMGM,player_rush_yds,Rico Dowdle,25.5,1.91,1.83
+BetOnline.ag,player_rush_yds,Rico Dowdle,24.5,1.89,1.87
+BetRivers,player_rush_yds,Rico Dowdle,23.5,1.83,1.91
+Caesars,player_rush_yds,Rico Dowdle,25.5,1.83,1.91
+DraftKings,player_rush_yds,Rico Dowdle,22.5,1.86,1.92
+FanDuel,player_rush_yds,Rico Dowdle,25.5,1.88,1.88
+Fanatics,player_rush_yds,Rico Dowdle,25.5,1.91,1.83
+BetMGM,player_rush_yds,Tank Bigsby,39.5,1.85,1.91
+BetOnline.ag,player_rush_yds,Tank Bigsby,43.5,1.88,1.88
+BetRivers,player_rush_yds,Tank Bigsby,42.5,1.88,1.85
+Caesars,player_rush_yds,Tank Bigsby,43.5,1.83,1.91
+DraftKings,player_rush_yds,Tank Bigsby,42.5,1.9,1.88
+FanDuel,player_rush_yds,Tank Bigsby,43.5,1.88,1.88
+Fanatics,player_rush_yds,Tank Bigsby,45.5,1.91,1.83
+BetMGM,player_rush_yds,Tetairoa McMillan,0.5,4.75,1.16
+BetMGM,player_rush_yds,Travis Etienne Jr.,39.5,1.91,1.85
+BetOnline.ag,player_rush_yds,Travis Etienne Jr.,39.5,1.89,1.87
+BetRivers,player_rush_yds,Travis Etienne Jr.,39.5,1.85,1.88
+Caesars,player_rush_yds,Travis Etienne Jr.,39.5,1.87,1.87
+DraftKings,player_rush_yds,Travis Etienne Jr.,40.5,1.91,1.88
+FanDuel,player_rush_yds,Travis Etienne Jr.,38.5,1.88,1.88
+Fanatics,player_rush_yds,Travis Etienne Jr.,40.5,1.95,1.8
+BetMGM,player_rush_yds,Trevor Lawrence,14.5,1.91,1.83
+BetOnline.ag,player_rush_yds,Trevor Lawrence,13.5,1.85,1.91
+BetRivers,player_rush_yds,Trevor Lawrence,14.5,1.85,1.88
+Caesars,player_rush_yds,Trevor Lawrence,13.5,1.77,2.0
+DraftKings,player_rush_yds,Trevor Lawrence,13.5,1.85,1.94
+FanDuel,player_rush_yds,Trevor Lawrence,13.5,1.88,1.88
+Fanatics,player_rush_yds,Trevor Lawrence,15.5,2.05,1.71
