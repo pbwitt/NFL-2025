@@ -3,6 +3,37 @@
 import argparse, pathlib
 import pandas as pd
 import numpy as np
+# --- odds loader that accepts JSON array or CSV ---
+import json, pathlib, pandas as pd, sys
+
+def load_odds(path: str) -> pd.DataFrame:
+    p = pathlib.Path(path)
+    txt = p.read_text(encoding="utf-8").strip()
+    if not txt:
+        raise SystemExit(f"odds file is empty: {path}")
+    # Drop any `[info]` lines if present
+    if "[info]" in txt:
+        txt = "\n".join(ln for ln in txt.splitlines() if not ln.startswith("[info]")).strip()
+    # JSON array from The Odds API → flatten to games
+    if txt.startswith("["):
+        try:
+            arr = json.loads(txt)
+        except json.JSONDecodeError as e:
+            raise SystemExit(f"failed to parse JSON odds: {e}")
+        rows = []
+        for g in arr:
+            rows.append({
+                "game_id": g.get("id") or g.get("event_id"),
+                "commence_time": g.get("commence_time"),
+                "home_team": g.get("home_team"),
+                "away_team": g.get("away_team"),
+            })
+        return pd.DataFrame(rows)
+    # Else assume CSV
+    try:
+        return pd.read_csv(p)
+    except Exception as e:
+        raise SystemExit(f"failed to read CSV odds: {e}")
 
 # Normalize a few common bookmaker name variants to full team names
 NAME_FIX = {
@@ -38,7 +69,12 @@ def main():
     elo_map = dict(zip(elos["team"], elos["elo_2024_final"]))
 
     # Load unique games from odds
-    odds = pd.read_csv(args.odds, low_memory=False)
+    odds = load_odds(args.odds)
+    required = ["game_id","commence_time","home_team","away_team"]
+    missing = [c for c in required if c not in odds.columns]
+    if missing:
+        raise SystemExit(f"Odds missing required columns: {missing}. Columns present: {list(odds.columns)} from {args.odds}")
+
     games = odds[["game_id","commence_time","home_team","away_team"]].drop_duplicates().copy()
 
     # Fix common short names

@@ -53,16 +53,36 @@ CONS_HTML     := $(DOCS_DIR)/props/consensus.html
 .PHONY: odds
 ODDS_OUTDIR := data/odds
 
-odds: setup
+oodds: setup
 	$(load_env)
 	@mkdir -p $(ODDS_OUTDIR)
-	$(PY) scripts/fetch_odds.py \
-	  --sport_key nfl \
-	  --markets h2h,spreads,totals \
-	  --regions us \
-	  --odds_format american \
-	> $(ODDS_OUTDIR)/latest.csv
+	@$(PY) scripts/fetch_odds.py \
+		--sport_key americanfootball_nfl \
+		--markets h2h,spreads,totals \
+		--regions us \
+		--odds_format american \
+		> $(ODDS_OUTDIR)/latest.csv
 	@echo ">> wrote $(ODDS_OUTDIR)/latest.csv"
+	@$(PY) - <<-'PY'
+	import json, pandas as pd, pathlib, sys
+	src = pathlib.Path("$(ODDS_OUTDIR)/latest.csv")
+	txt = src.read_text().strip()
+	if not txt:
+	    sys.exit("latest.csv is empty")
+	arr = json.loads(txt) if txt.startswith('[') else []
+	rows = [{
+	    "game_id": g.get("id"),
+	    "commence_time": g.get("commence_time"),
+	    "home_team": g.get("home_team"),
+	    "away_team": g.get("away_team"),
+	} for g in arr]
+	out = pathlib.Path("$(ODDS_OUTDIR)/games_latest.csv")
+	pd.DataFrame(rows).to_csv(out, index=False)
+	print(f"[odds] wrote {out} with {len(rows)} rows")
+	PY
+
+
+
 
 
 
