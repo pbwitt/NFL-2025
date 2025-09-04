@@ -11,6 +11,66 @@ import argparse, pathlib, warnings, math
 import pandas as pd
 import numpy as np
 
+
+# ---- BEGIN ADDED HELPERS (anytime TD) ----
+import math
+
+def _prob_to_american(p: float) -> float:
+    if p is None or p <= 0 or p >= 1:
+        return float('nan')
+    return -(p/(1-p))*100.0 if p >= 0.5 else ((1-p)/p)*100.0
+
+_FALLBACK = {
+    "rush_att_td_rate": 0.028,
+    "rec_td_per_rec":   0.055,
+}
+
+def _std_market(s: str) -> str:
+    return s.lower().replace(" ", "_").replace(".", "")
+
+def _build_anytime_td_rows(params_df):
+    import pandas as pd
+    import numpy as np
+    out_rows = []
+    have_team = 'team' in params_df.columns
+    group_cols = ['player'] + (['team'] if have_team else [])
+    for _, g in params_df.groupby(group_cols, dropna=False):
+        gg = g.copy()
+        gg['market_std'] = gg['market'].map(_std_market)
+        lam = 0.0
+        # prefer direct TD mus
+        for m in ('player_rush_tds','rush_tds','player_reception_tds','rec_tds'):
+            v = gg.loc[gg['market_std']==_std_market(m),'mu']
+            if not v.empty and pd.notna(v.iloc[0]):
+                lam += float(v.iloc[0])
+        # fallback if no direct
+        if lam <= 0.0:
+            ra = gg.loc[gg['market_std'].isin(['player_rush_attempts','rush_att']),'mu']
+            if not ra.empty and pd.notna(ra.iloc[0]):
+                lam += float(ra.iloc[0]) * _FALLBACK['rush_att_td_rate']
+            rc = gg.loc[gg['market_std'].isin(['player_receptions','rec']),'mu']
+            if not rc.empty and pd.notna(rc.iloc[0]):
+                lam += float(rc.iloc[0]) * _FALLBACK['rec_td_per_rec']
+        lam = max(0.0, lam)
+        p_any = 1 - math.exp(-lam) if lam>0 else 0.0
+        fair = _prob_to_american(p_any)
+        out = {
+            'player': g['player'].iloc[0],
+            'market': 'player_anytime_td',
+            'mu': lam,
+            'sigma': float('nan'),
+            'model_prob': p_any,
+            'model_price': fair,
+            'model_line': fair,
+        }
+        if have_team: out['team'] = g['team'].iloc[0]
+        out_rows.append(out)
+    return out_rows
+# ---- END ADDED HELPERS ----
+
+
+
+
 def parse_args():
     ap = argparse.ArgumentParser()
     ap.add_argument("--season", type=int, required=True, help="Target season (e.g., 2025)")
@@ -190,8 +250,20 @@ def main():
 
     out = pathlib.Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+
+    # --- add anytime TD rows ---
+    anytime_rows = _build_anytime_td_rows(params)
+    if anytime_rows:
+        params = pd.concat([params, pd.DataFrame(anytime_rows)], ignore_index=True)
+
+    # reorder columns so new fields show up consistently
+    cols = ['player','team','market','mu','sigma','model_line','model_prob','model_price']
+    cols = [c for c in cols if c in params.columns] + [c for c in params.columns if c not in cols]
+    params = params[cols]
+
     params.to_csv(out, index=False)
-    print(f"Wrote {out} with {len(params):,} (player,market) rows for season={args.season}, week={args.week}")
+    print(f"Wrote {out} with {len(params):,} (player,market) rows for season={args.season}, week={args.week} (includes anytime TD)")
+
 
 if __name__ == "__main__":
     with warnings.catch_warnings():

@@ -24,3 +24,12 @@ data/**
 
 # notebooks
 .ipynb_checkpoints/
+data/*.csv
+.env
+/.env
+/data/
+*.tmp
+*.log
+__pycache__/
+*.pyc
+docs/.DS_Store

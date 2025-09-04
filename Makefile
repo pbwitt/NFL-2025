@@ -1,120 +1,111 @@
 # =====================================
-# NFL-2025 — Single Clean Makefile
+# NFL-2025 — Single Clean Makefile (fixed)
 # =====================================
-# One-shot full pipeline (edges + props) → static site → publish to docs/
-# Supports Week-1 bootstrap and normal Week-2+ weekly runs.
+# --- publishing guard ---
+SHELL := bash
+.ONESHELL:  # each recipe runs in one shell
+
+load_env = set -a; source .env 2>/dev/null || true; set +a
+
+
+PUBLISH ?= 0           # default: build only
+CONFIRM ?=             # to publish, call with CONFIRM=LIVE
+
+.DEFAULT_GOAL := help
 
 # ---------- Python / env ----------
 PY ?= python3
 
 # ---------- Season knobs ----------
 SEASON ?= 2025
-# Default to Week 2 going forward; override as needed: `make weekly WEEK=3`
 WEEK   ?= 1
 
-# Load .env if present (e.g., ODDS_API_KEY)
+.PHONY: props_now_pages
+
+props_now_pages:
+	@mkdir -p docs/props
+	python3 scripts/build_props_site.py --merged_csv data/props/props_with_model_week1.csv --out docs/props/index.html --title "NFL-2025 — Player Props (Week 1)"
+	python3 scripts/build_top_picks.py   --merged_csv data/props/props_with_model_week1.csv --out docs/props/top.html --week 1
+	python3 scripts/build_consensus_page.py --merged_csv data/props/props_with_model_week1.csv --out docs/props/consensus.html --week 1
+	touch docs/.nojekyll
+
+# ---------- .env (e.g., ODDS_API_KEY) ----------
 ifneq (,$(wildcard .env))
 -include .env
 export ODDS_API_KEY
 export
 endif
 
-
-# ---------- Data paths ----------
+# ---------- Paths ----------
 DATA_DIR      := data
-ODDS_OUTDIR   := $(DATA_DIR)/odds
+PROPS_DIR     := $(DATA_DIR)/props
+DOCS_DIR      := docs
+
+# Files (props)
+PROPS_LATEST  := $(PROPS_DIR)/latest_all_props.csv
+PARAMS_CSV    := $(PROPS_DIR)/params_week$(WEEK).csv
+MERGED_PROPS  := $(PROPS_DIR)/props_with_model_week$(WEEK).csv
+PROPS_HTML    := $(DOCS_DIR)/props/index.html
+CONS_HTML     := $(DOCS_DIR)/props/consensus.html
+
+# Files (edges/home)
+
+.PHONY: odds
+ODDS_OUTDIR := data/odds
+
+odds: setup
+	$(load_env)
+	@mkdir -p $(ODDS_OUTDIR)
+	$(PY) scripts/fetch_odds.py \
+	  --sport_key nfl \
+	  --markets h2h,spreads,totals \
+	  --regions us \
+	  --odds_format american \
+	> $(ODDS_OUTDIR)/latest.csv
+	@echo ">> wrote $(ODDS_OUTDIR)/latest.csv"
+
+
+
+
+
 PRED_OUT      := $(DATA_DIR)/predictions/latest_predictions.csv
 MERGED_OUT    := $(DATA_DIR)/merged/latest_with_edges.csv
 
-# Player CSV (for ML position models)
-PLAYER_CSV    := $(DATA_DIR)/weekly_player_stats.csv
-LOOKBACKS     := 1 3 5
-HOLDOUT       := 2024
+TOP_HTML  := $(DOCS_DIR)/props/top.html
 
-# ---------- Site paths ----------
-SITE_DIR      := site
-PAGES_DIR     := docs
 
 # ---------- PHONY ----------
-.PHONY: help \
-        update qb rb wrte fppr preds \
-        odds elo predict merge site serve clean \
-        props_odds_all player_props_pred_all props_merge_all site_props \
-        props_now monday weekly week1_bootstrap week1_all monday_all \
-        site_home publish_site
-
-.PHONY: check_key
-check_key:
-	@echo "ODDS_API_KEY prefix: $${ODDS_API_KEY:0:6}******"
-
+.PHONY: help setup check_key serve clean \
+        odds elo predict merge site_home \
+        fetch_props make_params make_edges build_props build_consensus \
+        props_now monday monday_all weekly publish_site \
+        td_merge td_page td_props_now
 
 # ----------------------------------
 # Help
 # ----------------------------------
 help:
 	@echo "Targets:"
-	@echo "  monday_all       - Run EVERYTHING (edges + props) and publish (Week $(WEEK), Season $(SEASON))"
-	@echo "  weekly           - Same as monday_all (alias)"
-	@echo "  week1_all        - One-time Week-1 bootstrap (edges + props) + publish"
-	@echo "  props_now        - Only refresh player props (all steps) + publish"
-	@echo "  serve            - Local preview of docs/ at http://127.0.0.1:8080"
-	@echo "  clean            - Remove built CSV/merged outputs (keeps site/docs)"
+	@echo "  monday_all  - Full run (edges + props + consensus) and publish"
+	@echo "  props_now   - Props end-to-end (incl. Consensus) and publish"
+	@echo "  td_props_now- TD-only props page and publish"
+	@echo "  serve       - Local preview at http://127.0.0.1:8080/"
+	@echo "  clean       - Remove generated CSVs (keeps docs/)"
 	@echo ""
-	@echo "Player models:"
-	@echo "  update           - Refresh player CSVs"
-	@echo "  qb|rb|wrte|fppr  - Run position models; 'preds' runs all four"
-	@echo ""
-	@echo "Team edges pipeline:"
-	@echo "  odds -> elo -> predict -> merge -> site"
-	@echo ""
-	@echo "Props pipeline:"
-	@echo "  props_odds_all -> player_props_pred_all -> props_merge_all -> site_props"
-	@echo ""
-	@echo "Publish:"
-	@echo "  publish_site     - Copy site/ -> docs/, add .nojekyll, commit, push"
+	@echo "Vars: SEASON=$(SEASON) WEEK=$(WEEK)"
+
+check_key:
+	@echo "ODDS_API_KEY prefix: $${ODDS_API_KEY:0:6}******"
+
+setup:
+	mkdir -p $(DOCS_DIR)/props $(PROPS_DIR) $(DATA_DIR)/predictions $(DATA_DIR)/merged $(ODDS_OUTDIR)
+	touch $(DOCS_DIR)/.nojekyll
+
 
 # ----------------------------------
-# Player prediction pipeline (optional, if/when you use player-level ML)
+# Team edges → Home (keep your existing scripts)
 # ----------------------------------
-update:
-	$(PY) scripts/pull_nfl_player_data.py --latest-week --out $(DATA_DIR) --csv
-	$(PY) scripts/pull_nfl_supplemental_data.py --latest-week --out $(DATA_DIR) --csv
 
-qb:
-	$(PY) scripts/ml_player_pipeline.py --player_csv $(PLAYER_CSV) \
-	  --target passing_yards --positions QB --lookbacks $(LOOKBACKS) \
-	  --split season_holdout --holdout_season $(HOLDOUT) \
-	  --predict_season $(SEASON) --predict_week $(WEEK) \
-	  --save_preds ./preds/$(SEASON)_wk$(WEEK)_qb_pass.csv
-
-rb:
-	$(PY) scripts/ml_player_pipeline.py --player_csv $(PLAYER_CSV) \
-	  --target rushing_yards --positions RB --lookbacks $(LOOKBACKS) \
-	  --split season_holdout --holdout_season $(HOLDOUT) \
-	  --predict_season $(SEASON) --predict_week $(WEEK) \
-	  --save_preds ./preds/$(SEASON)_wk$(WEEK)_rb_rush.csv
-
-wrte:
-	$(PY) scripts/ml_player_pipeline.py --player_csv $(PLAYER_CSV) \
-	  --target receiving_yards --positions WR TE --lookbacks $(LOOKBACKS) \
-	  --split season_holdout --holdout_season $(HOLDOUT) \
-	  --predict_season $(SEASON) --predict_week $(WEEK) \
-	  --save_preds ./preds/$(SEASON)_wk$(WEEK)_wrte_rec.csv
-
-fppr:
-	$(PY) scripts/ml_player_pipeline.py --player_csv $(PLAYER_CSV) \
-	  --target fantasy_points_ppr --positions QB RB WR TE --lookbacks $(LOOKBACKS) \
-	  --split season_holdout --holdout_season $(HOLDOUT) \
-	  --predict_season $(SEASON) --predict_week $(WEEK) \
-	  --save_preds ./preds/$(SEASON)_wk$(WEEK)_fppr.csv
-
-preds: qb rb wrte fppr
-
-# ----------------------------------
-# Team edges pipeline (odds → elo → predict → merge → site)
-# ----------------------------------
-odds:
-	$(PY) scripts/fetch_odds.py --markets h2h,spreads,totals --regions us
 
 elo:
 	$(PY) scripts/build_elo_2024.py
@@ -132,146 +123,130 @@ merge: predict
 	  --odds $(ODDS_OUTDIR)/latest.csv \
 	  --out $(MERGED_OUT)
 
-# Build the weekly site under ./site (edges page & home)
-site: merge
-	$(PY) scripts/export_weekly_site.py
-	# If you also render a separate edges page, keep this:
-	# $(PY) scripts/export_homepage.py
+site_home: merge
+	$(PY) scripts/build_edges_site.py --out $(DOCS_DIR)/index.html
+	touch $(DOCS_DIR)/.nojekyll
 
 # ----------------------------------
-# Player props pipeline (all props → params → merge → site/props)
+# All-props pipeline (new, unified)
 # ----------------------------------
-props_odds_all:
-	$(PY) scripts/fetch_all_player_props.py
+fetch_props: setup
+	$(load_env)
+	$(PY) scripts/fetch_all_player_props.py --season $(SEASON) --week $(WEEK) --out $(PROPS_LATEST)
+	@echo ">> wrote $(PROPS_LATEST)"
 
-player_props_pred_all:
-	# For WEEK=1 this script should automatically use prior-season history.
-	$(PY) scripts/make_player_prop_params.py --season $(SEASON) --week $(WEEK)
 
-props_merge_all:
-	$(PY) scripts/join_all_player_props_with_preds.py
+make_params:
+	$(PY) scripts/make_player_prop_params.py \
+	  --season $(SEASON) --week $(WEEK) \
+	  --props_csv $(PROPS_LATEST) \
+	  --out $(PARAMS_CSV)
 
-site_props:
-	$(PY) scripts/export_props_site.py
+make_edges:
+	$(PY) scripts/make_props_edges.py \
+	  --season $(SEASON) --week $(WEEK) \
+	  --props_csv $(PROPS_LATEST) \
+	  --params_csv $(PARAMS_CSV) \
+	  --out $(MERGED_PROPS)
 
-# Quick props-only refresh + publish
+props:
+	$(PY) scripts/build_props_site.py \
+	  --merged_csv $(MERGED_PROPS) \
+	  --out $(PROPS_HTML) \
+	  --title "NFL-2025 — Player Props (Week $(WEEK))"
 
-# ----------------------------------
-# Combined one-shots
-# ----------------------------------
+build_consensus:
+	$(PY) scripts/build_consensus_page.py \
+	  --merged_csv $(MERGED_PROPS) \
+	  --out $(CONS_HTML) \
+	  --title "NFL-2025 — Consensus vs Best Book (Week $(WEEK))"
 
-# Normal weekly run (Week 2 and beyond): edges + props + publish
-weekly: odds merge site props_odds_all player_props_pred_all props_merge_all site_props publish_site
-	@echo "✅ weekly (Season=$(SEASON) Week=$(WEEK)) complete"
 
-# Alias that matches your habit
-monday_all: weekly
-
-# Week-1 bootstrap (no current-season stats yet): edges + props + publish
-# Override WEEK on call if needed: `make week1_all WEEK=1`
-week1_bootstrap:
-	@echo "• Week-1 bootstrap: using Elo 2024 + opening odds"
-	$(MAKE) odds
-	$(MAKE) merge
-	$(MAKE) site
-
-week1_all: week1_bootstrap props_odds_all
-	# For WEEK=1, player params script is expected to backfill from prior season
-	$(MAKE) player_props_pred_all WEEK=1
-	$(MAKE) props_merge_all
-	$(MAKE) site_props
-	$(MAKE) publish_site
-	@echo "🎉 week1_all complete"
-
-# Back-compat alias if you still type this
-monday: weekly
-
-# ----------------------------------
-# Publish to GitHub Pages (docs/)
-# ----------------------------------
-
-# Local preview & housekeeping
-# ----------------------------------
-serve:
-	$(PY) -m http.server 8080 -d $(PAGES_DIR)
-
-clean:
-	rm -f $(PRED_OUT) $(MERGED_OUT)
-
-# Optional: build a homepage separately if you keep that script
-site_home:
-	$(PY) scripts/export_homepage.py
-
-player_props_params:
-	@if [ -z "$(WEEK)" ]; then \
-		echo "ERROR: you must pass WEEK, e.g. make player_props_params WEEK=1"; \
-		exit 1; \
-	fi
-		@mkdir -p data/props
-		python3 scripts/make_player_prop_params.py \
-			--season $(SEASON) --week $(WEEK) \
-			--out data/props/params_week$(WEEK).csv
-
-	# Load env (safe: ignores if .env missing)
-	# --- NFL-2025 publish targets ---
--include .env
-
-.PHONY: edges_now props_now monday_all publish_site
-
-edges_now:
-	python3 scripts/build_edges_site.py --out docs/edges/index.html
-
+# One-shot props (with Consensus) + publish
 props_now:
-	python3 scripts/build_props_site.py --out docs/props/index.html --days 7
+	@echo ">> SEASON=$(SEASON)  WEEK=$(WEEK)"
+	$(MAKE) fetch_props
+	$(MAKE) make_params
+	$(MAKE) make_edges
+	$(MAKE) build_props
+	$(MAKE) build_top
+	$(MAKE) build_consensus
 	touch docs/.nojekyll
-	git add -A docs
-	git commit -m "props: $$(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "Nothing to commit"
-	git push
-
-odds:
-	python3 scripts/fetch_odds.py
-
-monday_all:
-	@$(MAKE) edges_now
-	@$(MAKE) props_now
-
-publish_site:
-	touch docs/.nojekyll
-	git add -A docs
-	git commit -m "publish: $$(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "Nothing to commit"
-	git push
+	@echo ">> build complete (Props + Top + Consensus)."
+	@if [ "$(PUBLISH)" = "1" ] && [ "$(CONFIRM)" = "LIVE" ]; then \
+		echo ">> publishing to GitHub Pages..."; \
+		touch docs/.nojekyll; \
+		git add -A docs; \
+		git commit -m "props: $$(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true; \
+		git push -u origin main || true; \
+	else \
+		echo ">> SKIP publish (PUBLISH=$(PUBLISH) CONFIRM=$(CONFIRM))"; \
+		echo ">> preview locally: make serve  # http://127.0.0.1:8080/props/"; \
+	fi
 
 
+props_now_dev:      ## build only (no publish)
+	@$(MAKE) props_now PUBLISH=0
 
-	# TD props merge & page
-td_merge:
-	python3 scripts/merge_td_model.py \
-  	--props_csv data/props/latest_all_props.csv \
-		--params_csv data/props/params_week$(WEEK).csv \
-		--out_csv data/props/props_with_model_week$(WEEK).csv \
-		--market anytime_td
+props_now_pub:      ## build + publish (requires CONFIRM=LIVE)
+	@$(MAKE) props_now PUBLISH=1 CONFIRM=LIVE
 
-td_page:
-	python3 scripts/build_td_edges_page.py \
-	--merged_csv data/props/props_with_model_week$(WEEK).csv \
-	--out docs/props/index.html \
-	--min_prob 0.02 \
-	--limit 250
+monday_all_pub:     ## full weekly run + publish (requires CONFIRM=LIVE)
+	@$(MAKE) monday_all PUBLISH=1 CONFIRM=LIVE
 
-props_now: td_merge td_page
-	@touch docs/.nojekyll
-	@mkdir -p docs/props
-	git add -A docs
+build_top:
+	$(PY) scripts/build_top_picks.py \
+		--merged_csv $(MERGED_PROPS) \
+		--out $(TOP_HTML) \
+		--week $(WEEK)
+
+
+
+# ----------------------------------
+# TD-only quick path (kept from your file, fixed)
+# ----------------------------------
+td_merge: fetch_props make_params
+	$(PY) scripts/merge_td_model.py \
+	  --props_csv $(PROPS_LATEST) \
+	  --params_csv $(PARAMS_CSV) \
+	  --out_csv $(MERGED_PROPS) \
+	  --market anytime_td
+
+td_page: td_merge
+	$(PY) scripts/build_td_edges_page.py \
+	  --merged_csv $(MERGED_PROPS) \
+	  --out $(PROPS_HTML) \
+	  --min_prob 0.02 \
+	  --limit 250
+	touch $(DOCS_DIR)/.nojekyll
+
+td_props_now: td_page
+	git add -A $(DOCS_DIR)
 	git commit -m "publish TD props: $$(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
 	git push -u origin main || true
 
+# ----------------------------------
+# Full weekly run & publish
+# ----------------------------------
+weekly: odds site_home props_now
+	@echo "✅ weekly (Season=$(SEASON) Week=$(WEEK)) complete"
 
+monday_all: weekly
+monday: weekly
 
+# ----------------------------------
+# Publish / Serve / Clean
+# ----------------------------------
+publish_site:
+	touch $(DOCS_DIR)/.nojekyll
+	git add -A $(DOCS_DIR)
+	git commit -m "publish: $$(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
+	git push -u origin main || true
 
-td_page:
-python3 scripts/build_props_site.py \
-	--merged_csv data/props/props_with_model_week$(WEEK).csv \
-	--out docs/props/index.html \
-	--title "NFL-2025 — TD Props (Week $(WEEK))" \
-	--min_prob 0.01 \
-	--limit 3000
+serve:
+	$(PY) -m http.server 8080 -b 127.0.0.1 -d $(DOCS_DIR)
+
+clean:
+	rm -f $(PRED_OUT) $(MERGED_OUT) \
+	      $(PROPS_DIR)/params_week*.csv \
+	      $(PROPS_DIR)/props_with_model_week*.csv

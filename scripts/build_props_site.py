@@ -3,6 +3,7 @@ import argparse, json
 import pandas as pd
 import numpy as np
 from html import escape
+from site_common import nav_html, pretty_market, fmt_odds, fmt_pct, to_kick_et
 
 # ---------- helpers ----------
 def fmt_odds(o):
@@ -13,12 +14,112 @@ def fmt_odds(o):
     except Exception:
         return str(o)
 
+from site_common import (
+    nav_html, pretty_market,
+    fmt_odds, to_kick_et
+)
+
+
 def prob_to_american(p):
     if p is None or (isinstance(p,float) and (np.isnan(p) or p<=0 or p>=1)): return ""
     return int(round(-100*p/(1-p))) if p>=0.5 else int(round(100*(1-p)/p))
 
+def unit_for_market_std(market_std: str) -> str:
+    if not isinstance(market_std, str): return ""
+    ms = market_std.lower()
+    if "passing_yards" in ms or "rushing_yards" in ms or "receiving_yards" in ms: return "yds"
+    if "receptions"     in ms: return "rec"
+    if "completions"    in ms: return "cmp"
+    if "attempts"       in ms: return "att"
+    if "tackles"        in ms: return "tkl"
+    if "assists"        in ms: return "ast"
+    return ""
+
+def fmt_line(point, market_std):
+    """Format sportsbook threshold from `point` with a unit inferred from market_std."""
+    try:
+        val = float(point)
+    except Exception:
+        return ""
+    if pd.isna(val): return ""
+    unit = unit_for_market_std(market_std or "")
+    return f"{val:.1f}{(' ' + unit) if unit else ''}"
+
+def kickoff_et_series(commence_series):
+    """Convert ISO8601/Z times to 'Sun 1 p.m' in America/New_York."""
+    ts = pd.to_datetime(commence_series.astype(str), utc=True, errors="coerce")
+    out = []
+    for v in ts:
+        if pd.isna(v):
+            out.append("")
+            continue
+        local = v.tz_convert("America/New_York")
+        dow = local.strftime("%a")  # Sun, Mon, ...
+        hour12 = (local.hour % 12) or 12
+        minute = local.minute
+        ampm = "a.m" if local.hour < 12 else "p.m"
+        time_part = f"{hour12}" if minute == 0 else f"{hour12}:{minute:02d}"
+        out.append(f"{dow} {time_part} {ampm}")
+    return pd.Series(out, index=commence_series.index)
+# ---- Row helpers + renderer (PLACE THIS BELOW TEMPLATE) ----
+import math, html
+from site_common import to_kick_et  # you already import this at the top
+
+def _fmt_point(v):
+    try:
+        if v is None or (isinstance(v, float) and math.isnan(v)):
+            return ""
+        x = float(v)
+        return str(int(x)) if x.is_integer() else f"{x:g}"
+    except Exception:
+        return str(v) if v is not None else ""
+
+def row_html(r):
+    # Game (Away @ Home)
+    game = f"{html.escape(str(r.get('away_team','')))} @ {html.escape(str(r.get('home_team','')))}"
+
+    # Bet = market (pretty) + line
+    line_raw = r.get("line_disp") if r.get("line_disp") not in (None, "") else r.get("point")
+    line_str = _fmt_point(line_raw)
+    market_disp = str(r.get("market_disp",""))
+    bet = market_disp or str(r.get("market",""))
+    market_with_line = f"{bet} {line_str}".strip()
+
+    # Odds, Fair, percents, edge vs market
+    mkt_odds = r.get("price_disp", "")
+    fair     = r.get("model_price")
+    fair_str = "" if fair in (None,"") or (isinstance(fair,float) and math.isnan(fair)) else f"{int(fair):+d}"
+
+    mkt_pct   = r.get("mkt_prob_pct","")
+    model_pct = r.get("model_prob_pct","")
+    edge_bps  = r.get("edge_bps_mkt")
+    edge_str  = "" if edge_bps is None or (isinstance(edge_bps, float) and math.isnan(edge_bps)) else str(int(edge_bps))
+
+    # Kick (ET)
+    kick_iso  = r.get("kick_et") or r.get("commence_time") or ""
+    kick_disp = to_kick_et(str(kick_iso)) if kick_iso else ""
+
+    return (
+        "<tr>"
+        f"<td>{game}</td>"
+        f"<td>{html.escape(str(r.get('player','')))}</td>"
+        f"<td>{html.escape(str(r.get('bookmaker','')))}</td>"
+        f"<td>{html.escape(market_with_line)}</td>"
+        f"<td>{html.escape(line_str)}</td>"
+        f"<td>{mkt_odds}</td>"
+        f"<td>{fair_str}</td>"
+        f"<td>{html.escape(str(mkt_pct))}</td>"
+        f"<td>{html.escape(str(model_pct))}</td>"
+        f"<td>{edge_str}</td>"
+        f"<td>{html.escape(kick_disp)}</td>"
+        "</tr>"
+    )
+
 # ---------- main ----------
 def main():
+    import json
+    from html import escape
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--merged_csv", required=True)
     ap.add_argument("--out", required=True)
@@ -29,147 +130,141 @@ def main():
     ap.add_argument("--show_unmodeled", action="store_true", help="Include rows with missing model_prob")
     args = ap.parse_args()
 
-    df0 = pd.read_csv(args.merged_csv)
+    # Load
+    df0 = pd.read_csv(args.merged_csv, low_memory=False)
 
-    # Normalize presence of key cols
-    for c in ["market_std","player","home_team","away_team","bookmaker","market_prob","model_prob","model_price","price","commence_time"]:
-        if c not in df0.columns: df0[c] = np.nan
+    # Ensure expected cols exist
+    for c in ["market_std","player","home_team","away_team","bookmaker",
+              "model_prob","model_price","price","commence_time","point","market"]:
+        if c not in df0.columns:
+            df0[c] = np.nan
+
+    # Pretty market label available if you want it later
+    df0["market_disp"] = df0["market"].map(pretty_market) if "market" in df0.columns else ""
 
     # Drop "No Scorer" if requested
     if args.drop_no_scorer and "player" in df0.columns:
         df0 = df0[df0["player"].astype(str).str.lower() != "no scorer"].copy()
 
-    # Ensure a game display column
+    # Game label
     df0["home_team"] = df0["home_team"].fillna("").astype(str).str.strip()
     df0["away_team"] = df0["away_team"].fillna("").astype(str).str.strip()
-    df0["game"] = (df0["home_team"] + " vs " + df0["away_team"]).str.strip()
+    df0["game"] = (df0["away_team"] + " @ " + df0["home_team"]).str.strip()
 
-    # Display odds columns
-    if "price" in df0.columns:
-        df0["mkt_odds"] = df0["price"].apply(fmt_odds)
-    else:
-        df0["mkt_odds"] = ""
+    # Odds display
+    df0["mkt_odds"] = df0["price"].map(fmt_odds)
+
+    # Fair odds (prefer model_price, else from model_prob)
+    def _prob_to_american(p):
+        try:
+            p = float(p)
+        except Exception:
+            return np.nan
+        if not (0 < p < 1):
+            return np.nan
+        return int(round(-100*p/(1-p))) if p >= 0.5 else int(round(100*(1-p)/p))
 
     if "model_price" in df0.columns and df0["model_price"].notna().any():
-        df0["fair_odds"] = df0["model_price"].apply(fmt_odds)
+        df0["fair_odds"] = df0["model_price"].map(fmt_odds)
     else:
-        # fallback from model_prob
-        if "model_prob" in df0.columns:
-            df0["fair_odds"] = df0["model_prob"].apply(prob_to_american).map(fmt_odds)
-        else:
-            df0["fair_odds"] = ""
+        df0["fair_odds"] = df0["model_prob"].apply(_prob_to_american).map(fmt_odds)
 
-    # Display percentages (x100, 1 decimal)
-    df0["mkt_pct"]   = (df0.get("market_prob", np.nan) * 100).round(1)
-    df0["model_pct"] = (df0.get("model_prob", np.nan) * 100).round(1)
+    # Percentages
+    def _american_to_prob(o):
+        try:
+            o = float(o)
+        except Exception:
+            return np.nan
+        return (100.0/(o+100.0)) if o > 0 else (abs(o)/(abs(o)+100.0))
 
-    # Edge (bps)
-    if "edge_prob" in df0.columns:
-        edge = df0["edge_prob"]
-    else:
-        edge = df0.get("model_prob", np.nan) - df0.get("market_prob", np.nan)
-    df0["edge_bps"] = (edge * 10000).round(0)
+    df0["mkt_prob"]  = df0["price"].apply(_american_to_prob)
+    df0["mkt_pct"]   = df0["mkt_prob"].map(fmt_pct)
+    df0["model_pct"] = df0["model_prob"].map(fmt_pct)
 
-    # If not showing unmodeled, filter to rows with model_prob present
+    # Edge vs market implied (bps)
+    df0["edge_bps"] = ((df0["model_prob"] - df0["mkt_prob"]) * 1e4).round()
+
+    # Line (threshold) from sportsbook `point`
+    def _fmt_point(x):
+        try:
+            if pd.isna(x):
+                return ""
+            xf = float(x)
+            return str(int(xf)) if float(int(xf)) == xf else f"{xf:g}"
+        except Exception:
+            return str(x) if x is not None else ""
+    df0["line_disp"] = df0["point"].apply(_fmt_point)
+
+    # Kickoff, formatted to ET
+    df0["kick_et"] = df0["commence_time"].astype(str).map(to_kick_et)
+
+    # Filter modeled if requested
     df = df0.copy()
     if not args.show_unmodeled and "model_prob" in df.columns:
-        df = df[~df["model_prob"].isna()].copy()
+        df = df[df["model_prob"].notna()].copy()
         if args.min_prob is not None:
             df = df[df["model_prob"] >= args.min_prob].copy()
 
-    # Sort by edge desc (modeled rows will naturally bubble up)
+    # Sort & trim
     df = df.sort_values("edge_bps", ascending=False, na_position="last")
-
-    # Trim to limit
     if args.limit:
         df = df.head(args.limit).copy()
 
-    # Select/rename fields for UI (keep only what we render)
-    keep = ["game","player","bookmaker","market_std","mkt_odds","fair_odds","mkt_pct","model_pct","edge_bps","commence_time"]
+    # Keep exactly what the JS table uses
+    keep = [
+        "game","player","bookmaker",
+        # Bet column: use the slug the filters expect (market_std). If you prefer pretty, swap to "market_disp".
+        "market_std",
+        "line_disp",
+        "mkt_odds","fair_odds","mkt_pct","model_pct","edge_bps",
+        "kick_et"
+    ]
     for c in keep:
         if c not in df.columns:
             df[c] = ""
-    df = df[keep].copy()
-
-    # JSON for JS
-    # Ensure numbers are json-serializable (NaNs -> None)
-    records = json.loads(df.to_json(orient="records"))
-    jsdata = json.dumps(records)  # safe literal insertion
+    records = json.loads(df[keep].to_json(orient="records"))
+    jsdata = json.dumps(records)  # safe literal
 
     title_html = escape(args.title)
 
-    # -------- HTML (no f-string inside JS/CSS) --------
-    html = """
-<!doctype html>
+    # -------- HTML shell (your client-side renderer) --------
+    html = """<!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>""" + title_html + """</title>
 <style>
-:root {
-  --bg: #0b0b10;
-  --card: #14141c;
-  --muted: #9aa0a6;
-  --text: #e8eaed;
-  --accent: #6ee7ff;
-  --accent2: #a78bfa;
-  --border: #23232e;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0; padding: 24px;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  background: var(--bg); color: var(--text);
-}
-h1 { margin: 0 0 8px; font-size: 22px; font-weight: 700; letter-spacing: .2px; }
-.small { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
-.card {
-  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
-  border: 1px solid var(--border);
-  border-radius: 16px; padding: 16px; margin-bottom: 16px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 12px 40px rgba(0,0,0,0.35);
-}
-.controls { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
-select, input {
-  background: var(--card); color: var(--text); border: 1px solid var(--border);
-  border-radius: 10px; padding: 10px 12px; outline: none;
-}
-select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(110,231,255,.15); }
-.badge { display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; color:#111; background: var(--accent); }
-.table-wrap { overflow:auto; border:1px solid var(--border); border-radius: 14px; }
-table { border-collapse: collapse; width: 100%; min-width: 920px; }
-th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
-th { text-align: left; position: sticky; top: 0; background: var(--card); z-index: 1; font-size: 12px; color: var(--muted); letter-spacing: .2px; }
-td.num { text-align: right; font-variant-numeric: tabular-nums; }
-tr:hover td { background: rgba(255,255,255,0.02); }
-footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
-
-/* Buttons */
-a.button {
-  display: inline-block;
-  margin: 8px 0;
-  padding: 8px 14px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 600;
-  color: #111;
-  background: var(--accent2);
-  border: 1px solid var(--border);
-  transition: background .2s, color .2s;
-}
-a.button:hover { background: var(--accent); }
-
-/* subtle link for breadcrumbs */
-.linklike { color: var(--accent2); text-decoration:none; border-bottom:1px dotted var(--accent2); }
+:root { --bg:#0b0b10; --card:#14141c; --muted:#9aa0a6; --text:#e8eaed; --border:#23232e }
+*{box-sizing:border-box} body{margin:0;padding:24px;background:var(--bg);color:var(--text);
+font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+h1{margin:0 0 8px;font-size:22px;font-weight:700;letter-spacing:.2px}
+.small{color:var(--muted);font-size:12px;margin-bottom:16px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0));
+border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px;
+box-shadow:0 0 0 1px rgba(255,255,255,.02),0 12px 40px rgba(0,0,0,.35)}
+.controls{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+select,input{background:var(--card);color:var(--text);border:1px solid var(--border);
+border-radius:10px;padding:10px 12px;outline:none}
+.select:focus,input:focus{border-color:#6ee7ff;box-shadow:0 0 0 3px rgba(110,231,255,.15)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;color:#111;background:#6ee7ff}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:1000px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border)}
+th{text-align:left;position:sticky;top:0;background:var(--card);z-index:1;font-size:12px;color:var(--muted);letter-spacing:.2px}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:hover td{background:rgba(255,255,255,.02)}
+footer{color:var(--muted);font-size:12px;margin-top:16px}
+a.button{display:inline-block;margin:8px 0;padding:8px 14px;border-radius:10px;text-decoration:none;font-weight:600;color:#111;background:#a78bfa;border:1px solid var(--border)}
+a.button:hover{background:#6ee7ff}
+.linklike{color:#a78bfa;text-decoration:none;border-bottom:1px dotted #a78bfa}
 </style>
 </head>
 <body>
 
   <div class="card">
     <h1>""" + title_html + """</h1>
-    <div class="small">Select <span class="badge">Bet</span> → Game → Player. Optional: Book & search. Sorted by Edge (bps) by default.</div>
-    <p><a href="../" class="button">⬅ Back to Home</a></p>
+    <div class="small">Select <span class="badge">Bet</span> → Game → Player. Optional: Book & search. Sorted by Edge (bps). Line = sportsbook threshold.</div>
+    <p><a href="../" class="button">⬅ Back to Home</a> · <a class="linklike" href="./consensus.html">Consensus</a></p>
 
     <div class="controls">
       <select id="market"><option value="">Bet (market)</option></select>
@@ -190,26 +285,24 @@ a.button:hover { background: var(--accent); }
       <thead>
         <tr>
           <th>Game</th><th>Player</th><th>Book</th><th>Bet</th>
+          <th class="num">Line</th>
           <th class="num">Mkt Odds</th><th class="num">Fair</th>
           <th class="num">Mkt %</th><th class="num">Model %</th>
-          <th class="num">Edge (bps)</th><th>Kick</th>
+          <th class="num">Edge (bps)</th><th>Kick (ET)</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
 
-  <footer>Generated from merged CSV on your machine. Dark theme, zero dependencies.</footer>
+  <footer>Generated locally. Dark theme, zero dependencies.</footer>
 
 <script>
 const DATA = """ + jsdata + """;
 
-function uniqueSorted(arr) {
-  return [...new Set(arr.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-}
+function uniq(arr){ return [...new Set(arr.filter(Boolean))].sort((a,b)=>a.localeCompare(b)); }
 
-const state = { market: "", game: "", player: "", book: "", q: "" };
-
+const state = { market:"", game:"", player:"", book:"", q:"" };
 const selMarket = document.getElementById("market");
 const selGame   = document.getElementById("game");
 const selPlayer = document.getElementById("player");
@@ -218,69 +311,61 @@ const inputQ    = document.getElementById("q");
 const tbody     = document.querySelector("#tbl tbody");
 const countEl   = document.getElementById("count");
 
-function hydrateSelectors() {
-  uniqueSorted(DATA.map(r => r.market_std)).forEach(v => {
-    const o = document.createElement("option"); o.value=v; o.textContent=v; selMarket.appendChild(o);
-  });
-  uniqueSorted(DATA.map(r => r.bookmaker)).forEach(v => {
-    const o = document.createElement("option"); o.value=v; o.textContent=v; selBook.appendChild(o);
-  });
+function hydrateSelectors(){
+  uniq(DATA.map(r=>r.market_std)).forEach(v=>{ const o=document.createElement("option"); o.value=v; o.textContent=v; selMarket.appendChild(o); });
+  uniq(DATA.map(r=>r.bookmaker)).forEach(v=>{ const o=document.createElement("option"); o.value=v; o.textContent=v; selBook.appendChild(o); });
   rebuildDependentSelectors();
 }
-
-function rebuildDependentSelectors() {
+function rebuildDependentSelectors(){
   const base = DATA.filter(r => (!state.market || r.market_std===state.market) &&
                                 (!state.book   || r.bookmaker===state.book));
-  const games = uniqueSorted(base.map(r => r.game));
+  const games = uniq(base.map(r=>r.game));
   selGame.innerHTML = '<option value="">Game</option>' + games.map(g=>`<option value="${g}">${g}</option>`).join("");
   if (games.includes(state.game)) selGame.value = state.game; else state.game = "";
 
-  const base2 = base.filter(r => (!state.game || r.game === state.game));
-  const players = uniqueSorted(base2.map(r => r.player));
+  const base2 = base.filter(r => (!state.game || r.game===state.game));
+  const players = uniq(base2.map(r=>r.player));
   selPlayer.innerHTML = '<option value="">Player</option>' + players.map(p=>`<option value="${p}">${p}</option>`).join("");
   if (players.includes(state.player)) selPlayer.value = state.player; else state.player = "";
 }
 
-function render() {
+function render(){
   const q = state.q.trim().toLowerCase();
   const rows = DATA.filter(r =>
-    (!state.market || r.market_std === state.market) &&
-    (!state.game   || r.game       === state.game) &&
-    (!state.player || r.player     === state.player) &&
-    (!state.book   || r.bookmaker  === state.book) &&
+    (!state.market || r.market_std===state.market) &&
+    (!state.game   || r.game===state.game) &&
+    (!state.player || r.player===state.player) &&
+    (!state.book   || r.bookmaker===state.book) &&
     (!q || (r.player+" "+r.bookmaker+" "+r.game).toLowerCase().includes(q))
-  ).sort((a,b) => (b.edge_bps ?? -1) - (a.edge_bps ?? -1));
+  ).sort((a,b)=> (b.edge_bps ?? -1) - (a.edge_bps ?? -1));
 
   countEl.textContent = rows.length + " rows";
 
   tbody.innerHTML = rows.map(r => `
     <tr>
-      <td>${r.game || ""}</td>
-      <td>${r.player || ""}</td>
-      <td>${r.bookmaker || ""}</td>
-      <td>${r.market_std || ""}</td>
+      <td>${r.game||""}</td>
+      <td>${r.player||""}</td>
+      <td>${r.bookmaker||""}</td>
+      <td>${r.market_std||""}</td>
+      <td class="num">${r.line_disp ?? ""}</td>
       <td class="num">${r.mkt_odds ?? ""}</td>
       <td class="num">${r.fair_odds ?? ""}</td>
-      <td class="num">${(r.mkt_pct ?? "").toString()}</td>
-      <td class="num">${(r.model_pct ?? "").toString()}</td>
+      <td class="num">${r.mkt_pct ?? ""}</td>
+      <td class="num">${r.model_pct ?? ""}</td>
       <td class="num" style="color:${
-        (r.edge_bps === "" || r.edge_bps === null || r.edge_bps === undefined)
-          ? "var(--muted)"
-          : (r.edge_bps > 0 ? "#4ade80" : "#f87171")
-      }">${(r.edge_bps ?? "").toString()}</td>
-      <td>${r.commence_time || ""}</td>
+        (r.edge_bps==null) ? "#9aa0a6" : (r.edge_bps>0 ? "#4ade80" : "#f87171")
+      }">${r.edge_bps ?? ""}</td>
+      <td>${r.kick_et||""}</td>
     </tr>
   `).join("");
 }
 
-// events
-selMarket.addEventListener("change", e => { state.market=e.target.value; rebuildDependentSelectors(); render(); });
-selGame  .addEventListener("change", e => { state.game  =e.target.value; rebuildDependentSelectors(); render(); });
-selPlayer.addEventListener("change", e => { state.player=e.target.value; render(); });
-selBook  .addEventListener("change", e => { state.book  =e.target.value; rebuildDependentSelectors(); render(); });
-inputQ   .addEventListener("input",  e => { state.q     =e.target.value; render(); });
+selMarket.addEventListener("change", e=>{ state.market=e.target.value; rebuildDependentSelectors(); render(); });
+selGame  .addEventListener("change", e=>{ state.game  =e.target.value; rebuildDependentSelectors(); render(); });
+selPlayer.addEventListener("change", e=>{ state.player=e.target.value; render(); });
+selBook  .addEventListener("change", e=>{ state.book  =e.target.value; rebuildDependentSelectors(); render(); });
+inputQ   .addEventListener("input",  e=>{ state.q     =e.target.value; render(); });
 
-// init
 hydrateSelectors(); render();
 </script>
 </body></html>
