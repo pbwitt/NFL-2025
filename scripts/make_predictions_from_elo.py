@@ -4,36 +4,80 @@ import argparse, pathlib
 import pandas as pd
 import numpy as np
 # --- odds loader that accepts JSON array or CSV ---
-import json, pathlib, pandas as pd, sys
+# ---- Robust loader for Odds API output (JSON-with-noise or CSV) ----
+import json, pathlib, re, pandas as pd, sys
+
+def _extract_first_json_array(txt: str) -> str | None:
+    """Return the first well-balanced JSON array substring, or None."""
+    i = txt.find('[')
+    if i == -1:
+        return None
+    depth = 0
+    in_str = False
+    esc = False
+    for j, ch in enumerate(txt[i:], start=i):
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == '\\':
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == '[':
+            depth += 1
+        elif ch == ']':
+            depth -= 1
+            if depth == 0:
+                return txt[i:j+1]
+    return None
 
 def load_odds(path: str) -> pd.DataFrame:
     p = pathlib.Path(path)
-    txt = p.read_text(encoding="utf-8").strip()
-    if not txt:
+    raw = p.read_text(encoding="utf-8", errors="ignore")
+    if not raw or not raw.strip():
         raise SystemExit(f"odds file is empty: {path}")
-    # Drop any `[info]` lines if present
-    if "[info]" in txt:
-        txt = "\n".join(ln for ln in txt.splitlines() if not ln.startswith("[info]")).strip()
-    # JSON array from The Odds API → flatten to games
-    if txt.startswith("["):
-        try:
-            arr = json.loads(txt)
-        except json.JSONDecodeError as e:
-            raise SystemExit(f"failed to parse JSON odds: {e}")
-        rows = []
-        for g in arr:
-            rows.append({
-                "game_id": g.get("id") or g.get("event_id"),
-                "commence_time": g.get("commence_time"),
-                "home_team": g.get("home_team"),
-                "away_team": g.get("away_team"),
-            })
-        return pd.DataFrame(rows)
-    # Else assume CSV
+
+    # Strip chatty lines like "[info] ..."
+    lines = [ln for ln in raw.splitlines() if not ln.lstrip().startswith("[info]")]
+    txt = "\n".join(lines).strip()
+
+    # Try CSV first (cheap if it's already flat)
     try:
-        return pd.read_csv(p)
-    except Exception as e:
-        raise SystemExit(f"failed to read CSV odds: {e}")
+        df = pd.read_csv(pd.compat.StringIO(txt))
+        if {"game_id","commence_time","home_team","away_team"}.issubset(df.columns):
+            return df
+    except Exception:
+        pass
+
+    # Try to isolate the first balanced JSON array anywhere in the text
+    blob = _extract_first_json_array(txt)
+    if blob:
+        try:
+            arr = json.loads(blob)
+        except json.JSONDecodeError:
+            # Light repair: remove trailing commas before ] or }
+            repaired = re.sub(r",\s*([}\]])", r"\1", blob)
+            arr = json.loads(repaired)  # will raise if still invalid
+        rows = [{
+            "game_id": g.get("id") or g.get("event_id"),
+            "commence_time": g.get("commence_time"),
+            "home_team": g.get("home_team"),
+            "away_team": g.get("away_team"),
+        } for g in arr]
+        return pd.DataFrame(rows)
+
+    # Fallback: if a sibling flat file exists, use it
+    alt = p.with_name("games_latest.csv")
+    if alt.exists():
+        df = pd.read_csv(alt)
+        return df
+
+    snippet = txt[:200].replace("\n","\\n")
+    raise SystemExit(f"Could not parse odds as JSON or CSV. Snippet='{snippet}'")
+
 
 # Normalize a few common bookmaker name variants to full team names
 NAME_FIX = {
@@ -73,7 +117,8 @@ def main():
     required = ["game_id","commence_time","home_team","away_team"]
     missing = [c for c in required if c not in odds.columns]
     if missing:
-        raise SystemExit(f"Odds missing required columns: {missing}. Columns present: {list(odds.columns)} from {args.odds}")
+        raise SystemExit(f"Odds missing required columns: {missing}. "
+                         f"Columns present: {list(odds.columns)} from {args.odds}")
 
     games = odds[["game_id","commence_time","home_team","away_team"]].drop_duplicates().copy()
 
