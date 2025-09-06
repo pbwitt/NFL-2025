@@ -46,10 +46,30 @@
       .modeling { margin-top: 6px; }  /* avoid crowding on mobile */
     }
 
-
+    
+    @media (max-width:720px){
+      .nav-links{gap:6px; row-gap:8px}
+      .nav-link{padding:8px 10px}
+    }
+    .nav-link:focus-visible{
+      outline:2px solid var(--accent,#4c74ff);
+      outline-offset:2px; border-radius:10px;
+    }
 
   </style>
 </head>
+<!-- auto-highlight the current nav tab -->
+<script defer>
+(function(){
+  const here = location.pathname.replace(/\/+$/,'');
+  document.querySelectorAll('.nav-link').forEach(a=>{
+    const href = a.getAttribute('href'); if(!href) return;
+    const url = new URL(href, location.href);
+    if (url.pathname.replace(/\/+$/,'') === here) a.classList.add('active');
+  });
+})();
+</script>
+
 <body>
   <div class="wrap">
     <header>
