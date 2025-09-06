@@ -1,153 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FourthAndValue — NFL analytics for props & picks</title>
-  <style>
-    :root {
-      --bg: #0b0b10; --text: #f0f0f0; --muted:#b7b7c2; --card:#12121a; --border:#1f2230;
-      --brand1:#007BFF; --brand2:#00D4FF; --btn:#007BFF; --btn-hover:#045bba;
-    }
-    html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-    a { color: inherit; text-decoration: none; }
-    .fv-header {
-      position: sticky; top: 0; z-index: 10;
-      background: linear-gradient(180deg, rgba(11,11,16,.95), rgba(11,11,16,.7));
-      border-bottom:1px solid var(--border);
-      padding: 14px 20px;
-    }
-    .fv-container { max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; }
-    .fv-brand { font-weight: 800; letter-spacing:.2px; font-size: 20px; display:flex; align-items:center; gap:10px; }
-    .fv-logo { font-size: 22px; }
-    .fv-brand-text {
-      background: linear-gradient(90deg, var(--brand2), var(--brand1));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    .fv-nav a { opacity:.9; margin-left: 14px; padding:6px 10px; border-radius:8px; border:1px solid transparent; }
-    .fv-nav a:hover { border-color: var(--border); }
-    .fv-hero { text-align:center; padding: 48px 16px 20px; }
-    .fv-hero h1 {
-      margin:0; font-size: clamp(28px, 5vw, 44px);
-      background: linear-gradient(90deg, var(--brand1), var(--brand2));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      font-weight: 900;
-    }
-    .fv-hero p { color: var(--muted); font-size: 18px; margin: 10px auto 0; max-width: 800px; }
-    .fv-ctas { margin-top: 22px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
-    .fv-btn { background: var(--btn); color:#fff; padding:12px 18px; border-radius:10px; font-weight:700; border:1px solid #0a57b3; }
-    .fv-btn:hover { background: var(--btn-hover); }
-    .fv-sep { border:0; border-top:1px solid var(--border); margin: 24px 0; }
-    .fv-original { max-width: 1000px; margin: 0 auto; padding: 0 16px 40px; }
-    .fv-original h1, .fv-original h2, .fv-original h3 { color: #e9edf6; }
-    .fv-original p { color: #d4d7e1; line-height: 1.55; }
-  </style>
+<!doctype html>
+.card p{margin:0;color:var(--muted)}
+.footer{border-top:1px solid var(--border);margin-top:48px;padding:24px 0;color:var(--muted);font-size:14px}
+</style>
 </head>
 <body>
-  <header class="fv-header">
-    <div class="fv-container">
-      <div class="fv-brand"><span class="fv-logo">🏈</span><span class="fv-brand-text">FourthAndValue</span></div>
-      <nav class="fv-nav">
-        <a href="index.html">Home</a>
-        <a href="props/index.html">Props</a>
-        <a href="props/top.html">Top Picks</a>
-        <a href="props/consensus.html">Consensus</a>
-      </nav>
-    </div>
-  </header>
+<!-- Top Nav -->
+<nav class="nav">
+<div class="container nav-wrap">
+<div class="brand"><span class="dot"></span> Fourth &amp; Value</div>
+<ul>
+<li><a class="active" href="index.html">Home</a></li>
+<li><a href="props/index.html">Props</a></li>
+<li><a href="props/top.html">Top Picks</a></li>
+<li><a href="props/consensus.html">Consensus</a></li>
+<li><a href="methods.html">Methods</a></li>
+</ul>
+</div>
+</nav>
 
-  <section class="fv-hero">
-    <h1>FourthAndValue</h1>
-    <p>NFL player props and betting edges, powered by data. Keep your model median as the line, shop the vig, and execute the best book.</p>
-    <div class="fv-ctas">
-      <a class="fv-btn" href="props/index.html">🏈 Explore Player Props</a>
-      <a class="fv-btn" href="props/top.html">💰 Just tell me what to bet</a>
-    </div>
-  </section>
 
-  <hr class="fv-sep" />
+<main class="container">
+<section class="hero">
+<h1 class="h1">Sharper NFL bets, minus the noise.</h1>
+<p class="sub">Fourth &amp; Value runs weekly model updates and continuously compares sportsbook lines to our fair prices to surface edges worth your time. Keep the fun parts; let us handle the math.</p>
+<div class="cta">
+<a class="btn" href="props/index.html">Explore Player Props →</a>
+<a class="btn" href="props/top.html">Just tell me what to bet 💰</a>
+<a class="btn" href="methods.html">Methods (geeks only)</a>
+</div>
 
-  <div class="fv-original">
-    <!-- BEGIN ORIGINAL CONTENT (kept as-is) -->
-<!-- Hero / Marketing Section -->
+
+<div class="row">
 <div class="card">
-  <h1>⚡ NFL-2025: Actionable Insights Powered by AI</h1>
-  <p>
-    Welcome to the <strong>future of sports betting analytics</strong>.
-    We leverage the <strong>world’s most advanced AI models</strong> — neural networks, deep statistical ensembles, and Bayesian calibration —
-    to turn raw NFL data into <strong>clear, actionable insights</strong> for player props and game outcomes.
-  </p>
-  <p>
-    Our system ingests thousands of features each week — from snap counts and red-zone usage to weather conditions and Vegas line movements —
-    and translates them into <strong>fair odds, probabilities, and edges you can trust</strong>.
-  </p>
-  <p>
-    Whether you’re sharpening your betting strategy or exploring cutting-edge sports data science, NFL-2025 delivers the intelligence to stay ahead of the market.
-    If data isn't your thing, that is ok too!  We do the work so you don't have to. Our top picks for the week let you sift through the noise and hone in on the best bets.
-
-  <p>
-
-  <div class="btn-row">
-    <a href="props/" class="button">🏈 Explore Player Props</a>
-    <a href="props/top.html" class="button">💸 Just tell me what to bet</a>
-  </div>
+<h3>Real edges</h3>
+<p>We derive fair odds from model probabilities and show basis‑point edges vs the market.</p>
 </div>
-
-<!-- About the Models -->
 <div class="card">
-  <h2>🧠 Modeling Framework</h2>
-
-  <h3>1. Anytime TDs → Poisson + Neural Correction</h3>
-  <p>We model touchdowns using a Poisson distribution:</p>
-  <pre>P(X ≥ 1) = 1 - e<sup>-μ</sup></pre>
-  <p>
-    where <code>μ</code> is the expected number of TDs. Features include red-zone usage, opponent defensive splits, implied team totals, and pace of play.
-    A neural net (MLP, 2 hidden layers, ReLU) with ~120 features predicts <code>μ</code>, constrained positive with softplus.
-  </p>
-
-  <h3>2. Yardage & Reception Props → Normal Approximation</h3>
-  <p>Yardage and reception props are modeled with a Normal distribution:</p>
-  <pre>P(Over L) = 1 - Φ((L - μ) / σ)</pre>
-  <p>
-    Features (~150): rolling averages, opponent splits, injury adjustments, weather, and pace.
-    Models: RNN (GRU) for temporal player data + ensemble regressors for volatility (<code>σ</code>).
-  </p>
-
-  <h3>3. Discrete Count Props (TDs, Attempts, INTs, Sacks)</h3>
-  <p>Poisson or Negative Binomial:</p>
-  <pre>P(X ≤ k) = Σ<sub>i=0</sub><sup>k</sup> (e<sup>-λ</sup> λ<sup>i</sup> / i!)</pre>
-  <p>
-    Features: snap %, line pressure, opponent matchup splits.
-    Bayesian shrinkage stabilizes sparse markets like sacks.
-  </p>
-
-  <h3>4. Neural Meta-Model</h3>
-  <p>
-    Market-specific models feed into a 3-layer fully connected NN meta-learner, correcting systemic bookmaker biases (overshading, inflation).
-  </p>
-
-  <h3>5. Fair Odds & Edge</h3>
-  <p>Fair odds:</p>
-  <pre>Fair Odds = -100 * p/(1-p) if p ≥ 0.5, else +100 * (1-p)/p</pre>
-  <p>Edge:</p>
-  <pre>Edge = p<sub>model</sub> - p<sub>market</sub></pre>
-  <p>Expressed in basis points: <code>10,000 × Edge</code>.</p>
-
-  <h3>📊 Example Outputs</h3>
-  <ul>
-    <li><strong>Anytime TD (Saquon Barkley, Week 1)</strong><br>
-      Market: -195 (66.1%) → Model: 55.3% → Fair: +123 → Edge: –1080 bps (fade)</li>
-    <li><strong>Receiving Yards (WR, line 64.5)</strong><br>
-      Market: O64.5 -110 (52.4%) → Model: μ=71.2, σ=18.4 → P(Over)=59.1% → Fair: -145 → Edge: +670 bps (value)</li>
-  </ul>
+<h3>Shop best books</h3>
+<p>We highlight the best available book per bet and a consensus view across books.</p>
 </div>
-
-<!-- Footer -->
-<div class="card" style="text-align:center; font-size:13px; color:var(--muted)">
-  <p>© 2025 NFL-2025 Analytics Project</p>
-  <p><a href="props/" class="button">Go to Player Props</a></p>
+<div class="card">
+<h3>Fast scanning</h3>
+<p>Use filters to jump to high‑signal picks; keep scrolling if you want the full board.</p>
 </div>
-    <!-- END ORIGINAL CONTENT -->
-  </div>
+</div>
+</section>
+
+
+<section class="footer">
+© <span id="y"></span> Fourth &amp; Value
+</section>
+</main>
+
+
+<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 </body>
 </html>
