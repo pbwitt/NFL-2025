@@ -1,49 +1,34 @@
 <!doctype html>
-a{color:var(--accent);text-decoration:none}
-.container{max-width:960px;margin:0 auto;padding:0 16px}
-.nav{position:sticky;top:0;z-index:20;background:rgba(15,19,32,0.9);backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid var(--border)}
-.nav-wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700}
-.brand .dot{display:inline-block;width:10px;height:10px;border-radius:999px;background:var(--accent2)}
-.nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0}
-.nav a{padding:8px 10px;border-radius:10px;color:var(--fg)}
-.nav a.active,.nav a:hover{background:var(--btn-hover)}
-
-
-h1{font-size:36px;margin:24px 0 8px}
-h2{margin:28px 0 8px}
-.lead{color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin:18px 0}
-code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace}
-pre{background:#0b0f1b;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto}
-</style>
-</head>
-<body>
-<!-- Top Nav (Methods active) -->
-<nav class="nav">
-<div class="container nav-wrap">
-<div class="brand"><span class="dot"></span> Fourth &amp; Value</div>
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="props/index.html">Props</a></li>
-<li><a href="props/top.html">Top Picks</a></li>
-<li><a href="props/consensus.html">Consensus</a></li>
-<li><a class="active" href="methods.html">Methods</a></li>
-</ul>
-</div>
-</nav>
-
-
-<main class="container">
-<h1>Methods</h1>
-<p class="lead">This is the "geeks only" section: modeling assumptions, probability conversions, fair price math, and edge/EV definitions. The rest of the site works fine without reading this.</p>
-
-
 <!-- 👇 Paste your existing modeling framework content into the next card. -->
 <section class="card">
 <h2 id="modeling-framework">Modeling framework</h2>
 <!-- START: PASTE FROM OLD HOME PAGE -->
-<p><em>Paste the full framework text you had on the home page here.</em></p>
+<ol class="methods-list">
+<li>
+<h3>Anytime TDs → Poisson + Neural Correction</h3>
+<p>We model touchdowns using a Poisson distribution: <code>P(X ≥ 1) = 1 − e^{-μ}</code>, where <code>μ</code> is the expected number of TDs.</p>
+<p>Features include red‑zone usage, opponent defensive splits, implied team totals, and pace of play. A neural net (MLP, 2 hidden layers, ReLU) with ~120 features predicts <code>μ</code>, constrained positive with softplus.</p>
+</li>
+<li>
+<h3>Yardage &amp; Reception Props → Normal Approximation</h3>
+<p>Yardage and reception props are modeled with a Normal distribution: <code>P(Over L) = 1 − Φ((L − μ) / σ)</code>.</p>
+<p>Features (~150): rolling averages, opponent splits, injury adjustments, weather, and pace. Models: RNN (GRU) for temporal player data + ensemble regressors for volatility (<code>σ</code>).</p>
+</li>
+<li>
+<h3>Discrete Count Props (TDs, Attempts, INTs, Sacks)</h3>
+<p>Poisson or Negative Binomial with CDF form <code>P(X ≤ k) = Σ<sub>i=0</sub><sup>k</sup> (e^{−λ} λ^i / i!)</code>.</p>
+<p>Features: snap %, line pressure, opponent matchup splits. Bayesian shrinkage stabilizes sparse markets like sacks.</p>
+</li>
+<li>
+<h3>Neural Meta‑Model</h3>
+<p>Market‑specific models feed into a 3‑layer fully‑connected NN meta‑learner, correcting systemic bookmaker biases (overshading, inflation).</p>
+</li>
+<li>
+<h3>Fair Odds &amp; Edge</h3>
+<p>Fair odds: <code>FairOdds = −100 × p/(1−p)</code> if <code>p ≥ 0.5</code>, else <code>+100 × (1−p)/p</code>.</p>
+<p>Edge: <code>Edge = p<sub>model</sub> − p<sub>market</sub></code>, expressed in basis points: <code>10,000 × Edge</code>.</p>
+</li>
+</ol>
 <!-- END: PASTE FROM OLD HOME PAGE -->
 </section>
 
