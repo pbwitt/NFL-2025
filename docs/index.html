@@ -1,1 +1,16 @@
 <meta http-equiv="refresh" content="0; url=props/top.html">
+
+<script>
+(function () {
+  try {
+    var parts = location.pathname.split('/').filter(Boolean);
+    if (!parts.length) return;
+    var base = '/' + parts[0]; // '/NFL-2025'
+    document.querySelectorAll('a[href^="/"]').forEach(function (a) {
+      var href = a.getAttribute('href') || '';
+      if (!href || href.indexOf(base + '/') === 0) return;
+      a.setAttribute('href', base + href);
+    });
+  } catch (e) {}
+})();
+</script>
