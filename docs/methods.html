@@ -1,56 +1,6 @@
 <!doctype html>
 <!-- 👇 Paste your existing modeling framework content into the next card. -->
-<section class="card">
-<h2 id="modeling-framework">Modeling framework</h2>
-<!-- START: PASTE FROM OLD HOME PAGE -->
-<ol class="methods-list">
-<li>
-<h3>Anytime TDs → Poisson + Neural Correction</h3>
-<p>We model touchdowns using a Poisson distribution: <code>P(X ≥ 1) = 1 − e^{-μ}</code>, where <code>μ</code> is the expected number of TDs.</p>
-<p>Features include red‑zone usage, opponent defensive splits, implied team totals, and pace of play. A neural net (MLP, 2 hidden layers, ReLU) with ~120 features predicts <code>μ</code>, constrained positive with softplus.</p>
-</li>
-<li>
-<h3>Yardage &amp; Reception Props → Normal Approximation</h3>
-<p>Yardage and reception props are modeled with a Normal distribution: <code>P(Over L) = 1 − Φ((L − μ) / σ)</code>.</p>
-<p>Features (~150): rolling averages, opponent splits, injury adjustments, weather, and pace. Models: RNN (GRU) for temporal player data + ensemble regressors for volatility (<code>σ</code>).</p>
-</li>
-<li>
-<h3>Discrete Count Props (TDs, Attempts, INTs, Sacks)</h3>
-<p>Poisson or Negative Binomial with CDF form <code>P(X ≤ k) = Σ<sub>i=0</sub><sup>k</sup> (e^{−λ} λ^i / i!)</code>.</p>
-<p>Features: snap %, line pressure, opponent matchup splits. Bayesian shrinkage stabilizes sparse markets like sacks.</p>
-</li>
-<li>
-<h3>Neural Meta‑Model</h3>
-<p>Market‑specific models feed into a 3‑layer fully‑connected NN meta‑learner, correcting systemic bookmaker biases (overshading, inflation).</p>
-</li>
-<li>
-<h3>Fair Odds &amp; Edge</h3>
-<p>Fair odds: <code>FairOdds = −100 × p/(1−p)</code> if <code>p ≥ 0.5</code>, else <code>+100 × (1−p)/p</code>.</p>
-<p>Edge: <code>Edge = p<sub>model</sub> − p<sub>market</sub></code>, expressed in basis points: <code>10,000 × Edge</code>.</p>
-</li>
-</ol>
-<!-- END: PASTE FROM OLD HOME PAGE -->
-</section>
 
-
-<section class="card">
-<h2>Fair odds & implied probability</h2>
-<p>We map model probabilities \(p\) to American odds using
-\(\text{odds}(p) = \begin{cases}-100\,p/(1-p) & p\ge 0.5\\ 100\,(1-p)/p & p<0.5\end{cases}\).
-Implied probability from American price \(A\) is \(p=\frac{-A}{100-A}\) for minus prices and \(p=\frac{100}{A+100}\) for plus prices.</p>
-</section>
-
-
-<section class="card">
-<h2>Edge & EV</h2>
-<p>We show <strong>edge (bps)</strong> as the difference between modeled probability and market probability, expressed in basis points: <code>edge_bps = (p_model - p_market) * 10,000</code>. Expected value per $1 stake follows standard American‑odds EV with the model probability.</p>
-</section>
-
-
-<section class="card">
-<h2>Consensus vs Best Book</h2>
-<p>Consensus lines aggregate across books to show signal stability; the “Best Book” callout highlights the most favorable current price observed.</p>
-</section>
 
 <!doctype html>
 <html lang="en">
@@ -74,6 +24,30 @@ Implied probability from American price \(A\) is \(p=\frac{-A}{100-A}\) for minu
     .card p, li{color:#c8c8cd;line-height:1.55}
     .btn{display:inline-block;background:var(--btn);color:#fff;padding:10px 14px;border-radius:12px;text-decoration:none;font-weight:600}
     .btn:hover{background:var(--btn-hover)}
+
+      /* 3-col grid already exists as .grid; ensure it's a CSS grid */
+    .grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+
+    /* Place modeling text under the CENTER card, tighten spacing, nudge right a bit */
+    .modeling{
+      grid-column:2;          /* sits beneath the middle card */
+      margin-top:8px;         /* pull it up tight under the card */
+      padding-left:6px;       /* slight right indent */
+    }
+    .modeling h2{ margin:0 0 6px; font-size:22px; }
+    .modeling .sub{ margin:0 0 10px; color:var(--muted); }
+    .modeling ol{ margin:0; padding-left:18px; }
+    .modeling li{ margin:6px 0; }
+
+
+    .modeling { margin-top: -6px; }   /* adjust between -4px and -10px to taste */
+
+    @media (max-width: 720px){
+      .modeling { margin-top: 6px; }  /* avoid crowding on mobile */
+    }
+
+
+
   </style>
 </head>
 <body>
@@ -125,16 +99,62 @@ Implied probability from American price \(A\) is \(p=\frac{-A}{100-A}\) for minu
       </ul>
     </div>
 
-    <p><a class="btn" href="props/top.html">Jump to Top Picks →</a></p>
+
+    <section class="card">
+    <h3>Consensus vs Best Book</h3>
+    <p>Consensus lines aggregate across books to show signal stability; the “Best Book” callout highlights the most favorable current price observed.</p>
+
+
+    </section>
+
+
+
   </div>
 </body>
 </html>
 
+<div class="modeling">
+  <h2>Modeling Framework for Props</h2>
+  <p class="sub">A glimpse into our secret sauce.</p>
+
+
+</div>
+
 <section class="card">
-<h2>Data pipeline (summary)</h2>
-<pre><code>fetch_all_player_props.py → make_player_prop_params.py → make_props_edges.py → build_props_site.py / build_top_page.py / build_consensus_page.py</code></pre>
-<p>Weekly runs refresh parameters and recompute fair prices; pages update in <code>docs/props/</code>.</p>
+
+<!-- START: PASTE FROM OLD HOME PAGE -->
+  <ol class="methods-list">
+  <li>
+  <h3>Anytime TDs → Poisson + Neural Correction</h3>
+  <p>We model touchdowns using a Poisson distribution: <code>P(X ≥ 1) = 1 − e^{-μ}</code>, where <code>μ</code> is the expected number of TDs.</p>
+  <p>Features include red‑zone usage, opponent defensive splits, implied team totals, and pace of play. A neural net (MLP, 2 hidden layers, ReLU) with ~120 features predicts <code>μ</code>, constrained positive with softplus.</p>
+  </li>
+  <li>
+  <h3>Yardage &amp; Reception Props → Normal Approximation</h3>
+  <p>Yardage and reception props are modeled with a Normal distribution: <code>P(Over L) = 1 − Φ((L − μ) / σ)</code>.</p>
+  <p>Features (~150): rolling averages, opponent splits, injury adjustments, weather, and pace. Models: RNN (GRU) for temporal player data + ensemble regressors for volatility (<code>σ</code>).</p>
+  </li>
+  <li>
+  <h3>Discrete Count Props (TDs, Attempts, INTs, Sacks)</h3>
+  <p>Poisson or Negative Binomial with CDF form <code>P(X ≤ k) = Σ<sub>i=0</sub><sup>k</sup> (e^{−λ} λ^i / i!)</code>.</p>
+  <p>Features: snap %, line pressure, opponent matchup splits. Bayesian shrinkage stabilizes sparse markets like sacks.</p>
+  </li>
+  <li>
+  <h3>Neural Meta‑Model</h3>
+  <p>Market‑specific models feed into a 3‑layer fully‑connected NN meta‑learner, correcting systemic bookmaker biases (overshading, inflation).</p>
+  </li>
+  <li>
+  <h3>Fair Odds &amp; Edge</h3>
+  <p>Fair odds: <code>FairOdds = −100 × p/(1−p)</code> if <code>p ≥ 0.5</code>, else <code>+100 × (1−p)/p</code>.</p>
+  <p>Edge: <code>Edge = p<sub>model</sub> − p<sub>market</sub></code>, expressed in basis points: <code>10,000 × Edge</code>.</p>
+  </li>
+  </ol>
+  <<!-- NEW: Modeling block under the middle card -->
+
+
 </section>
+
+
 
 
 <section style="height:24px"></section>
