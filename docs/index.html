@@ -1,61 +1,91 @@
 <!doctype html>
-<nav class="nav">
-<div class="container nav-wrap">
-<div class="brand"><span class="dot"></span> Fourth &amp; Value</div>
-<ul>
-<li><a class="active" href="index.html">Home</a></li>
-<li><a href="props/index.html">Props</a></li>
-<li><a href="props/top.html">Top Picks</a></li>
-<li><a href="props/consensus.html">Consensus</a></li>
-<li><a href="methods.html">Methods</a></li>
-</ul>
-</div>
-</nav>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Fourth &amp; Value — Home</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{color-scheme:dark;
+      --bg:#0b0b0c;--card:#111113;--text:#e7e7ea;--muted:#b7b7bb;--soft:#c8c8cd;--border:#1f1f22;
+      --brand:#2a63ff;--brand-2:#5b8aff;--btn:#2a63ff;--btn-hover:#3c72ff
+    }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Inter,Roboto,Ubuntu,Helvetica,Arial,sans-serif}
+    .wrap{max-width:1024px;margin:0 auto;padding:24px 16px 48px}
+    header{position:sticky;top:0;z-index:20;background:#0b0b0cE6;backdrop-filter:saturate(180%) blur(6px);
+      border-bottom:1px solid var(--border);margin:-24px -16px 16px;padding:10px 16px}
+    .brand{font-weight:900;font-size:20px;color:#fff;display:flex;gap:8px;align-items:center}
+    .brand .logo{font-size:20px}
+    nav{display:flex;gap:10px;margin-left:auto}
+    nav a{color:#c8c8cd;text-decoration:none;padding:6px 10px;border-radius:10px}
+    nav a:hover{color:#fff;background:#151518}
+    .hero{display:grid;gap:10px;margin:12px 0 16px}
+    .hero h1{font-size:clamp(26px,4.2vw,40px);margin:0;color:#fff}
+    .lead{color:var(--muted);font-size:16px;line-height:1.55;margin:0 0 8px}
+    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+    .btn{display:inline-block;background:var(--btn);color:#fff;padding:10px 14px;border-radius:12px;text-decoration:none;font-weight:600}
+    .btn:hover{background:var(--btn-hover)}
+    .btn.ghost{background:#1a1a1d;border:1px solid #2a2a2e;color:#e7e7ea}
+    .grid{display:grid;gap:12px;margin:18px 0}
+    @media (min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px}
+    .card h3{margin:0 0 4px;color:#fff;font-size:18px}
+    .card p{margin:0;color:#c8c8cd;font-size:14px;line-height:1.5}
+    .section h2{margin:18px 0 6px;font-size:20px;color:#fff}
+    .section p{color:#d6d6d9;line-height:1.6;margin:0 0 10px}
+    footer{margin-top:30px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand"><span class="logo">🏈</span><span>Fourth &amp; Value</span></div>
+      <!-- use relative links so GH Pages + local both work -->
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="props/index.html">Props</a>
+        <a href="props/top.html">Top Picks</a>
+        <a href="props/consensus.html">Consensus</a>
+        <a href="methods.html">Methods</a>
+      </nav>
+    </header>
 
+    <section class="hero">
+      <h1>Sharper NFL bets, minus the noise.</h1>
+      <p class="lead">
+        Fourth &amp; Value runs weekly model updates and continuously compares sportsbook lines to our fair prices to surface edges worth your time.
+        Keep the fun parts; let us handle the math.
+      </p>
+      <div class="cta">
+        <a class="btn" href="props/index.html">Explore Player Props →</a>
+        <a class="btn ghost" href="props/top.html">Just tell me what to bet 💰</a>
+        <a class="btn ghost" href="methods.html">Methods (geeks only)</a>
+      </div>
+    </section>
 
-<main class="container">
-<section class="hero">
-<h1 class="h1">Sharper NFL bets, minus the noise.</h1>
-<p class="sub">Fourth &amp; Value runs weekly model updates and continuously compares sportsbook lines to our fair prices to surface edges worth your time. Keep the fun parts; let us handle the math.</p>
-<div class="cta">
-<a class="btn" href="props/index.html">Explore Player Props →</a>
-<a class="btn" href="props/top.html">Just tell me what to bet 💰</a>
-<a class="btn" href="methods.html">Methods (geeks only)</a>
-</div>
+    <section class="grid">
+      <div class="card">
+        <h3>Real edges</h3>
+        <p>We derive fair odds from model probabilities and show basis-point edges vs the market.</p>
+      </div>
+      <div class="card">
+        <h3>Shop best books</h3>
+        <p>We highlight the best available book per bet and a consensus view across books.</p>
+      </div>
+      <div class="card">
+        <h3>Fast scanning</h3>
+        <p>Use filters to jump to high-signal picks; keep scrolling if you want the full board.</p>
+      </div>
+    </section>
 
+    <section class="section">
+      <h2>Actionable Insights Powered by AI</h2>
+      <p>Welcome to the future of sports betting analytics. We leverage advanced neural networks, robust statistical ensembles, and Bayesian calibration to translate raw NFL data into clear, actionable insights.</p>
+      <p>Our system ingests thousands of features each week — from snap counts and red-zone usage to weather conditions and line movement — and converts them into fair odds, probabilities, and edges you can trust.</p>
+      <p>Whether you’re sharpening strategy or just want a shortlist of high-EV angles, we help you sift the noise and hone in on the best bets.</p>
+    </section>
 
-<div class="row">
-<div class="card">
-<h3>Real edges</h3>
-<p>We derive fair odds from model probabilities and show basis‑point edges vs the market.</p>
-</div>
-<div class="card">
-<h3>Shop best books</h3>
-<p>We highlight the best available book per bet and a consensus view across books.</p>
-</div>
-<div class="card">
-<h3>Fast scanning</h3>
-<p>Use filters to jump to high‑signal picks; keep scrolling if you want the full board.</p>
-</div>
-</div>
-</section>
-
-
-<!-- Added: Actionable Insights section -->
-<section class="card">
-<h2>Actionable Insights Powered by AI</h2>
-<p>Welcome to the future of sports betting analytics. We leverage the world’s most advanced AI models — neural networks, deep statistical ensembles, and Bayesian calibration — to turn raw NFL data into clear, actionable insights for player props and game outcomes.</p>
-<p>Our system ingests thousands of features each week — from snap counts and red-zone usage to weather conditions and Vegas line movements — and translates them into fair odds, probabilities, and edges you can trust.</p>
-<p>Whether you’re sharpening your betting strategy or exploring cutting-edge sports data science, NFL-2025 delivers the intelligence to stay ahead of the market. If data isn't your thing, that is ok too! We do the work so you don't have to. Our top picks for the week let you sift through the noise and hone in on the best bets.</p>
-</section>
-
-
-<section class="footer">
-© <span id="y"></span> Fourth &amp; Value
-</section>
-</main>
-
-
-<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+    <footer>© Fourth &amp; Value</footer>
+  </div>
 </body>
 </html>

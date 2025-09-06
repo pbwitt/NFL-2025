@@ -52,6 +52,83 @@ Implied probability from American price \(A\) is \(p=\frac{-A}{100-A}\) for minu
 <p>Consensus lines aggregate across books to show signal stability; the “Best Book” callout highlights the most favorable current price observed.</p>
 </section>
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Fourth &amp; Value — Methods</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{color-scheme:dark;--bg:#0b0b0c;--card:#111113;--text:#e7e7ea;--muted:#b7b7bb;--soft:#c8c8cd;--border:#1f1f22;--btn:#2a63ff;--btn-hover:#3c72ff}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Inter,Roboto,Ubuntu,Helvetica,Arial,sans-serif}
+    .wrap{max-width:900px;margin:0 auto;padding:24px 16px 48px}
+    header{position:sticky;top:0;z-index:20;background:#0b0b0cE6;backdrop-filter:saturate(180%) blur(6px);border-bottom:1px solid var(--border);margin:-24px -16px 16px;padding:10px 16px}
+    .brand{font-weight:900;font-size:20px;color:#fff;display:flex;gap:8px;align-items:center}
+    nav{display:flex;gap:10px;margin-left:auto}
+    nav a{color:#c8c8cd;text-decoration:none;padding:6px 10px;border-radius:10px}
+    nav a:hover{color:#fff;background:#151518}
+    h1{font-size:clamp(24px,4vw,34px);margin:6px 0 6px}
+    p.lead{color:var(--muted);margin:0 0 12px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:12px 0}
+    .card h3{margin:0 0 6px}
+    .card p, li{color:#c8c8cd;line-height:1.55}
+    .btn{display:inline-block;background:var(--btn);color:#fff;padding:10px 14px;border-radius:12px;text-decoration:none;font-weight:600}
+    .btn:hover{background:var(--btn-hover)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">🏈 Fourth &amp; Value</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="props/index.html">Props</a>
+        <a href="props/top.html">Top Picks</a>
+        <a href="props/consensus.html">Consensus</a>
+      </nav>
+    </header>
+
+    <h1>Methods (geeks only)</h1>
+    <p class="lead">How we turn raw NFL data into fair odds, probabilities, and edges.</p>
+
+    <div class="card">
+      <h3>Modeling</h3>
+      <ul>
+        <li>Feature-rich player &amp; game models (usage, injuries, weather, pace, matchups).</li>
+        <li>Ensembles + calibration to produce well-behaved probabilities.</li>
+        <li>Weekly refreshes; in-week updates when markets move materially.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Market consensus &amp; fair prices</h3>
+      <ul>
+        <li>Compute implied probabilities from American odds and de-vig where appropriate.</li>
+        <li>Form a consensus (median/robust avg) across books for the same bet.</li>
+        <li>Compare model vs consensus to quantify true edge.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Edges &amp; EV</h3>
+      <ul>
+        <li>Edge reported in basis points (bps): <code>10000 × (model_prob − price_prob)</code>.</li>
+        <li>EV per $100 shown using model probability and book odds.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Quality &amp; controls</h3>
+      <ul>
+        <li>Outlier checks, injury/news sweeps, and market sanity filters.</li>
+        <li>Transparency: show both market consensus and best book for every pick.</li>
+      </ul>
+    </div>
+
+    <p><a class="btn" href="props/top.html">Jump to Top Picks →</a></p>
+  </div>
+</body>
+</html>
 
 <section class="card">
 <h2>Data pipeline (summary)</h2>
