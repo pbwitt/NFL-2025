@@ -34,6 +34,37 @@
     .section h2{margin:18px 0 6px;font-size:20px;color:#fff}
     .section p{color:#d6d6d9;line-height:1.6;margin:0 0 10px}
     footer{margin-top:30px;color:var(--muted);font-size:12px}
+    /* Button alignment fix */
+    .cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    .btn{
+      display: inline-flex;            /* center text vertically */
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;                /* consistent height */
+      padding: 0 16px;                 /* vertical padding now 0 (height controls it) */
+      line-height: 1;                  /* kill baseline drift */
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      vertical-align: middle;
+      border: 1px solid transparent;   /* ensures ghost vs solid are same height */
+      box-sizing: border-box;
+    }
+
+    .btn:hover { background: var(--btn-hover); }
+
+    /* If you still use a ghost variant */
+    .btn.ghost{
+      background: #1a1a1d;
+      color: #e7e7ea;
+      border-color: #2a2a2e;
+    }
+
+    /* Optional: nudge emoji so it doesn't pull the baseline */
+    .btn .emoji{ display:inline-block; transform: translateY(1px); margin-left: 4px; }
+
+
   </style>
 </head>
 <body>
@@ -50,18 +81,33 @@
       </nav>
     </header>
 
-    <section class="hero">
-      <h1>Sharper NFL bets, minus the noise.</h1>
-      <p class="lead">
-        Fourth &amp; Value runs weekly model updates and continuously compares sportsbook lines to our fair prices to surface edges worth your time.
-        Keep the fun parts; let us handle the math.
-      </p>
-      <div class="cta">
-        <a class="btn" href="props/index.html">Explore Player Props →</a>
-        <a class="btn ghost" href="props/top.html">Just tell me what to bet 💰</a>
-        <a class="btn ghost" href="methods.html">Methods (geeks only)</a>
-      </div>
-    </section>
+  <section class="hero">
+    <h1>Sharper NFL bets, minus the noise.</h1>
+
+    <p>
+      Welcome to the future of sports betting analytics. We leverage the latest AI — advanced neural networks,
+      robust statistical ensembles, and Bayesian calibration — to translate raw NFL data into clear, actionable insights.
+      Our system ingests thousands of features each week — from snap counts and red-zone usage to weather conditions and
+      line movement — and converts them into fair odds, probabilities, and edges you can trust.
+    </p>
+
+    <p>
+      Fourth &amp; Value runs weekly model updates and continuously compares sportsbook lines to our fair prices
+      to surface edges worth your time. Keep the fun parts; let us handle the math.
+    </p>
+
+    <div class="cta">
+      <a class="btn" href="props/index.html">Explore Player Props <span class="emoji">🔍</span></a>
+      <a class="btn" href="props/top.html">Just tell me what to bet💰</a>
+      <a class="btn" href="methods.html">Methods (geeks only) <span class="emoji">🧠</span></a>
+  </div>
+</section>
+
+
+<section class="hero">
+  <h2>Why us?</h2>
+
+</section>
 
     <section class="grid">
       <div class="card">
@@ -73,17 +119,12 @@
         <p>We highlight the best available book per bet and a consensus view across books.</p>
       </div>
       <div class="card">
-        <h3>Fast scanning</h3>
-        <p>Use filters to jump to high-signal picks; keep scrolling if you want the full board.</p>
+        <h3>Data Driven Insights</h3>
+        <p>Pulls data from multiple sources to provide state of the art modeiing and analytics.</p>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Actionable Insights Powered by AI</h2>
-      <p>Welcome to the future of sports betting analytics. We leverage advanced neural networks, robust statistical ensembles, and Bayesian calibration to translate raw NFL data into clear, actionable insights.</p>
-      <p>Our system ingests thousands of features each week — from snap counts and red-zone usage to weather conditions and line movement — and converts them into fair odds, probabilities, and edges you can trust.</p>
-      <p>Whether you’re sharpening strategy or just want a shortlist of high-EV angles, we help you sift the noise and hone in on the best bets.</p>
-    </section>
+
 
     <footer>© Fourth &amp; Value</footer>
   </div>
