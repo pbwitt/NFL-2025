@@ -1,0 +1,239 @@
+<header class="site-header">
+  <nav class="navbar">
+    <a class="brand" href="../index.html">Fourth &amp; Value 🏈</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <a class="nav-link" href="../props/index.html">Props</a>
+      <a class="nav-link" href="../props/consensus.html">Consensus</a>
+      <a class="nav-link" href="../props/top.html">Top Picks</a>
+      <a class="nav-link" href="../methods.html">Methods</a>
+    </div>
+  </nav>
+</header><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>NFL-2025 — Top Picks (Week 1)</title>
+<link rel="icon" href="data:,">
+<style>
+:root { color-scheme: dark }
+* { box-sizing: border-box; }
+body { margin:0; background:#0b0b0c; color:#e7e7ea; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Inter,Roboto,Ubuntu,Helvetica,Arial,sans-serif; }
+.container { max-width: 1100px; margin: 0 auto; padding: 18px 16px 32px; }
+.h1 { font-size: clamp(22px,3.5vw,28px); font-weight:900; color:#fff; margin: 4px 0 10px; }
+
+/* Controls */
+.controls { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 10px; align-items:end; }
+label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:#b7b7bb; }
+input,select { background:#111113; border:1px solid #232327; color:#e7e7ea; border-radius:10px; padding:8px 10px; min-width:110px; }
+button.badge { font-size:12px; background:#2a63ff; border:none; color:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; }
+button.reset { background:#1a1a1d; border:1px solid #2a2a2e; color:#e7e7ea; }
+.note { margin:6px 0 16px; color:#b7b7bb; font-size:13px; }
+
+/* Card grid (responsive: 1-up → 2-up → 3-up) */
+#list {
+  display: grid;
+  grid-template-columns: 1fr;      /* mobile: 1-up */
+  gap: 12px;
+}
+@media (min-width: 760px) {
+  #list { grid-template-columns: repeat(2, 1fr); }   /* tablet: 2-up */
+}
+@media (min-width: 1100px) {
+  #list { grid-template-columns: repeat(3, 1fr); }   /* desktop: 3-up */
+}
+
+/* Card — compact, mobile-first */
+.card {
+  background:#111113; border:1px solid #1f1f22; border-radius:16px;
+  padding:12px 12px; display:flex; flex-direction:column; gap:6px;
+}
+.meta { display:flex; flex-wrap:wrap; gap:6px; align-items:center; color:#8a8a90; font-size:12px; }
+.meta .dot { opacity:.6; }
+.headline { display:flex; flex-wrap:wrap; gap:6px; align-items:baseline; }
+.player { color:#fff; font-weight:800; font-size:15px; }
+.market { color:#c8c8cd; font-size:14px; }
+.betline { color:#e3e3e6; font-size:14px; }
+
+/* Tight stats grid (no big spacing) */
+.kvgrid {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 10px;
+  row-gap: 2px;
+  align-items: baseline;
+  font-size: 13px; color: #d6d6d9;
+}
+.kvgrid > div:nth-child(odd) { color:#b7b7bb; }  /* labels */
+
+.footer { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:4px; }
+.copy { background:#2a63ff; color:#fff; border:none; border-radius:10px; padding:8px 12px; cursor:pointer; }
+.footer .right { display:flex; gap:12px; align-items:center; }
+.bestbook { color:#b7b7bb; font-size:12px; }
+.modelline { color:#b7b7bb; font-size:12px; }
+
+/* Wider container on large screens (pairs nicely with 3-up grid) */
+@media (min-width: 900px) {
+  .container { max-width: 1100px; }
+}
+
+/* === NAV (injected) === */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(20,20,24,.65);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border,#2a2a2e)}
+.navbar{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:800;text-decoration:none;color:var(--text,#e9edf6)}
+.nav-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px}
+.nav-link{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;
+  text-decoration:none;color:var(--text,#e9edf6)}
+.nav-link:hover{background:var(--btn-hover,rgba(76,117,255,.14))}
+.nav-link.active{border:1px solid var(--accent,#4c74ff);background:rgba(76,117,255,.10)}
+@media (max-width:720px){.navbar{padding:8px 12px}.nav-links{gap:6px}}
+.nav-link:focus-visible{outline:2px solid var(--accent,#4c74ff);outline-offset:2px;border-radius:10px}
+</style>
+
+
+
+</head>
+\1
+<header class="w-full sticky top-0 z-20 bg-neutral-900/85 backdrop-blur border-b border-neutral-800">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="text-xl font-black tracking-tight text-white">Fourth & Value</div>
+    <nav class="flex gap-1"><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/index.html">Home</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/index.html">Props</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/consensus.html">Consensus</a><a class="font-semibold text-white px-3 py-2 rounded-lg" href="/props/top.html">Top Picks</a></nav>
+  </div>
+</header>
+<script>
+(function() {
+  try {
+    var parts = location.pathname.split('/').filter(Boolean);
+    // project sites look like /<repo>/...; user/org sites don't need this
+    if (!parts.length) return;
+    var base = '/' + parts[0];  // '/NFL-2025'
+    // Only rewrite if link starts with '/' and isn't already prefixed
+    document.querySelectorAll('header nav a[href^="/"]').forEach(function(a) {
+      var href = a.getAttribute('href');
+      if (!href) return;
+      if (href.indexOf(base + '/') === 0) return;  // already has prefix
+      a.setAttribute('href', base + href);
+    });
+  } catch (e) {}
+})();
+</script>
+
+<main class="container">
+  <div class="h1">NFL-2025 — Top Picks (Week 1)</div>
+
+  <div class="controls">
+    <label>Min edge (bps)
+      <input id="minEdge" type="number" value="0" step="10">
+    </label>
+    <label>Top N
+      <input id="topN" type="number" value="10" step="10">
+    </label>
+    <label>Market
+      <select id="marketFilter"><option value="">All</option></select>
+    </label>
+    <label>Game
+      <select id="gameFilter"><option value="">All</option></select>
+    </label>
+    <label>Book
+      <select id="bookFilter"><option value="">All</option></select>
+    </label>
+    <div style="display:flex; gap:8px;">
+      <button class="badge" onclick="applyFilters()">Apply</button>
+      <button class="badge reset" onclick="resetFilters()">Reset</button>
+    </div>
+  </div>
+
+  <div class="note">Note: <b>market consensus</b> is the aggregated market view (e.g., average/median de-vig price/line across books). We surface edges vs that consensus and vs each book.</div>
+
+  <div id="list"></div>
+  <div id="empty" style="display:none; color:#9b9ba1; margin:12px 0;">No results. Try lowering Min edge or clearing filters.</div>
+</main>
+<script>
+function readInt(id, fallback) {
+  const raw = document.getElementById(id)?.value;
+  const v = Number.parseInt(raw, 10);
+  return Number.isFinite(v) ? v : fallback;
+}
+function readFloat(id, fallback) {
+  const raw = document.getElementById(id)?.value;
+  const v = Number.parseFloat(raw);
+  return Number.isFinite(v) ? v : fallback;
+}
+function getEdge(el) {
+  const raw = el.getAttribute('data-edge');
+  if (raw === null || raw === '') return NaN;
+  const v = Number.parseFloat(raw);
+  return Number.isFinite(v) ? v : NaN;
+}
+function showCard(el) { el.style.removeProperty('display'); }  // let CSS decide
+function hideCard(el) { el.style.display = 'none'; }
+
+
+function applyFilters() {
+  const minEdge = readFloat('minEdge', 0);
+  const topN    = readInt('topN', 10);
+  const mv      = (document.getElementById('marketFilter')?.value || '');
+  const gv      = (document.getElementById('gameFilter')?.value || '');
+  const bv      = (document.getElementById('bookFilter')?.value || '');
+
+  const list  = document.getElementById('list');
+  const empty = document.getElementById('empty');
+  const cards = Array.from(list.querySelectorAll('.card'));
+
+  // sort by edge desc; NaN edges sort last
+  cards.sort((a,b) => {
+    const ea = getEdge(a), eb = getEdge(b);
+    const sa = Number.isFinite(ea) ? ea : -1e9;
+    const sb = Number.isFinite(eb) ? eb : -1e9;
+    return sb - sa;
+  });
+
+  let shown = 0;
+  cards.forEach(c => {
+    const e = getEdge(c);
+    const okEdge = Number.isFinite(e) ? (e >= minEdge) : (minEdge <= 0);
+    const okMkt  = !mv || c.dataset.market === mv;
+    const okGame = !gv || c.dataset.game === gv;
+    const okBook = !bv || c.dataset.book === bv;
+    const ok = okEdge && okMkt && okGame && okBook;
+
+    if (ok && shown < topN) { showCard(c); shown++; } else { hideCard(c); }
+  });
+
+  empty.style.display = shown ? 'none' : 'block';
+}
+
+function resetFilters() {
+  document.getElementById('minEdge').value = 0;
+  document.getElementById('topN').value = 10;
+  document.getElementById('marketFilter').selectedIndex = 0;
+  document.getElementById('gameFilter').selectedIndex = 0;
+  document.getElementById('bookFilter').selectedIndex = 0;
+  applyFilters();
+}
+
+function copyCard(btn) {
+  const card = btn.closest('.card');
+  const t = (sel) => card.querySelector(sel)?.textContent.trim() || '';
+  const text = [t('.row.player'), t('.row.game'), t('.row.time'), t('.row.bet')].filter(Boolean).join(' | ');
+  navigator.clipboard.writeText(text);
+  btn.textContent = "Copied!"; setTimeout(()=>btn.textContent="Copy bet", 900);
+}
+
+applyFilters();
+</script>
+<!-- auto-highlight current nav tab -->
+<script defer>
+(function(){
+  const here = location.pathname.replace(/\/+$/,'');
+  document.querySelectorAll('.nav-link').forEach(a=>{
+    const href = a.getAttribute('href'); if(!href) return;
+    const url = new URL(href, location.href);   // works under /user/repo/
+    if (url.pathname.replace(/\/+$/,'') === here) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

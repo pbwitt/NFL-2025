@@ -1,0 +1,103 @@
+<header class="site-header">
+  <nav class="navbar">
+    <a class="brand" href="../index.html">Fourth &amp; Value 🏈</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <a class="nav-link" href="../props/index.html">Props</a>
+      <a class="nav-link" href="../props/consensus.html">Consensus</a>
+      <a class="nav-link" href="../props/top.html">Top Picks</a>
+      <a class="nav-link" href="../methods.html">Methods</a>
+    </div>
+  </nav>
+</header><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>NFL-2025 — Consensus vs Best Book (Week 1)</title>
+<link rel="icon" href="data:,">
+<style>
+:root { color-scheme: dark }
+* { box-sizing: border-box; }
+body { margin:0; background:#0b0b0c; color:#e7e7ea; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Inter,Roboto,Ubuntu,Helvetica,Arial,sans-serif; }
+.container { max-width: 1200px; margin: 0 auto; padding: 18px 16px 32px; }
+.h1 { font-size: clamp(22px,3.5vw,28px); font-weight:900; color:#fff; margin: 4px 0 10px; }
+
+.tablewrap { overflow:auto; border:1px solid #1f1f22; border-radius:14px; }
+table { width:100%; border-collapse: collapse; min-width: 900px; }
+thead th { text-align:left; font-weight:700; font-size:12px; color:#b7b7bb; padding:10px 12px; background:#111113; position:sticky; top:0; }
+tbody td { border-top:1px solid #1f1f22; padding:10px 12px; font-size:13px; }
+tbody tr:hover { background:#0f0f11; }
+td.game { color:#c8c8cd; }
+td.player { font-weight:700; color:#fff; }
+td.bet { color:#e3e3e6; }
+td.cons, td.edge { white-space:nowrap; }
+
+.note { margin:10px 0 16px; color:#b7b7bb; font-size:13px; }
+
+/* === NAV (injected) === */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(20,20,24,.65);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border,#2a2a2e)}
+.navbar{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:800;text-decoration:none;color:var(--text,#e9edf6)}
+.nav-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px}
+.nav-link{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;
+  text-decoration:none;color:var(--text,#e9edf6)}
+.nav-link:hover{background:var(--btn-hover,rgba(76,117,255,.14))}
+.nav-link.active{border:1px solid var(--accent,#4c74ff);background:rgba(76,117,255,.10)}
+@media (max-width:720px){.navbar{padding:8px 12px}.nav-links{gap:6px}}
+.nav-link:focus-visible{outline:2px solid var(--accent,#4c74ff);outline-offset:2px;border-radius:10px}
+</style>
+</head>
+\1
+<header class="w-full sticky top-0 z-20 bg-neutral-900/85 backdrop-blur border-b border-neutral-800">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="text-xl font-black tracking-tight text-white">Fourth & Value</div>
+    <nav class="flex gap-1"><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/index.html">Home</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/index.html">Props</a><a class="font-semibold text-white px-3 py-2 rounded-lg" href="/props/consensus.html">Consensus</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/top.html">Top Picks</a></nav>
+  </div>
+</header>
+<script>
+(function() {
+  try {
+    var parts = location.pathname.split('/').filter(Boolean);
+    // project sites look like /<repo>/...; user/org sites don't need this
+    if (!parts.length) return;
+    var base = '/' + parts[0];  // '/NFL-2025'
+    // Only rewrite if link starts with '/' and isn't already prefixed
+    document.querySelectorAll('header nav a[href^="/"]').forEach(function(a) {
+      var href = a.getAttribute('href');
+      if (!href) return;
+      if (href.indexOf(base + '/') === 0) return;  // already has prefix
+      a.setAttribute('href', base + href);
+    });
+  } catch (e) {}
+})();
+</script>
+
+<main class="container">
+  <div class="h1">NFL-2025 — Consensus vs Best Book (Week 1)</div>
+  <div class="note">Market consensus = median implied probability across books for the same bet. “Edge” shows how favorable the best book is versus that market consensus.</div>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Kick</th><th>Game</th><th>Player</th><th>Market</th><th>Best book bet</th><th>Market consensus</th><th>Edge</th></tr>
+      </thead>
+      <tbody>
+        
+      </tbody>
+    </table>
+  </div>
+</main>
+<!-- auto-highlight current nav tab -->
+<script defer>
+(function(){
+  const here = location.pathname.replace(/\/+$/,'');
+  document.querySelectorAll('.nav-link').forEach(a=>{
+    const href = a.getAttribute('href'); if(!href) return;
+    const url = new URL(href, location.href);   // works under /user/repo/
+    if (url.pathname.replace(/\/+$/,'') === here) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>
