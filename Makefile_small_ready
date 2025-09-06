@@ -1,0 +1,24 @@
+PY ?= python3
+PAGES_DIR := docs
+
+# Build the styled site into site/
+build_site:
+	$(PY) scripts/export_weekly_site.py
+
+# Build the styled props pages into site/props/
+site_props:
+	$(PY) scripts/export_props_site.py
+
+# Publish to GitHub Pages (copies the stylish site/ → docs/)
+publish_pages: build_site site_props
+	rm -rf $(PAGES_DIR)
+	mkdir -p $(PAGES_DIR)
+	cp -a site/. $(PAGES_DIR)/
+	touch $(PAGES_DIR)/.nojekyll
+	git add -A $(PAGES_DIR)
+	git commit -m "publish: $$(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "Nothing to commit"
+	git push origin main
+
+# Local preview of docs/
+dev_serve:
+	$(PY) -m http.server 8080 -d $(PAGES_DIR)

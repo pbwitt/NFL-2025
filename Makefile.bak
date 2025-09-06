@@ -1,0 +1,32 @@
+# --- NFL-2025 Makefile (tabless; uses .RECIPEPREFIX) ---
+.RECIPEPREFIX := >
+PY ?= python3
+PAGES_DIR := docs
+
+# ---- Minimal help ----
+help:
+> @echo "Targets:"
+> @echo "  edges_html     - Build docs/index.html (team edges)"
+> @echo "  props_html     - Build docs/props/index.html (player props)"
+> @echo "  publish_pages  - Build docs/ and push main (GitHub Pages)"
+> @echo "  dev_serve      - Serve docs/ at http://127.0.0.1:8080"
+
+# ---- Pages builders (call your two Python stubs) ----
+edges_html:
+> mkdir -p $(PAGES_DIR)
+> $(PY) scripts/build_edges_site.py --out $(PAGES_DIR)/index.html
+> touch $(PAGES_DIR)/.nojekyll
+
+props_html:
+> mkdir -p $(PAGES_DIR)/props
+> $(PY) scripts/build_props_site.py --out $(PAGES_DIR)/props/index.html
+> touch $(PAGES_DIR)/.nojekyll
+
+publish_pages: edges_html props_html
+> git add -A $(PAGES_DIR)
+> git commit -m "publish: $$(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "Nothing to commit"
+> git push origin main
+
+# ---- Local dev server for docs/ ----
+dev_serve:
+> $(PY) -m http.server 8080 -d $(PAGES_DIR)

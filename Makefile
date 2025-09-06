@@ -53,7 +53,7 @@ CONS_HTML     := $(DOCS_DIR)/props/consensus.html
 .PHONY: odds
 ODDS_OUTDIR := data/odds
 
-oodds: setup
+odds: setup
 	$(load_env)
 	@mkdir -p $(ODDS_OUTDIR)
 	@$(PY) scripts/fetch_odds.py \
@@ -63,23 +63,7 @@ oodds: setup
 		--odds_format american \
 		> $(ODDS_OUTDIR)/latest.csv
 	@echo ">> wrote $(ODDS_OUTDIR)/latest.csv"
-	@$(PY) - <<-'PY'
-	import json, pandas as pd, pathlib, sys
-	src = pathlib.Path("$(ODDS_OUTDIR)/latest.csv")
-	txt = src.read_text().strip()
-	if not txt:
-	    sys.exit("latest.csv is empty")
-	arr = json.loads(txt) if txt.startswith('[') else []
-	rows = [{
-	    "game_id": g.get("id"),
-	    "commence_time": g.get("commence_time"),
-	    "home_team": g.get("home_team"),
-	    "away_team": g.get("away_team"),
-	} for g in arr]
-	out = pathlib.Path("$(ODDS_OUTDIR)/games_latest.csv")
-	pd.DataFrame(rows).to_csv(out, index=False)
-	print(f"[odds] wrote {out} with {len(rows)} rows")
-	PY
+
 
 
 
@@ -130,12 +114,13 @@ setup:
 elo:
 	$(PY) scripts/build_elo_2024.py
 
-predict: elo
-	@test -f $(ODDS_OUTDIR)/latest.csv || (echo "ERROR: $(ODDS_OUTDIR)/latest.csv not found. Run 'make odds' first." && exit 1)
+predict: odds elo
 	$(PY) scripts/make_predictions_from_elo.py \
-	  --odds $(ODDS_OUTDIR)/latest.csv \
-	  --elo data/models/elo_2024.csv \
-	  --out $(PRED_OUT)
+	--odds $(ODDS_OUTDIR)/games_latest.csv \
+	--elo data/models/elo_2024.csv \
+	--out $(PRED_OUT)
+
+
 
 merge: predict
 	$(PY) scripts/join_predictions_with_odds.py \
@@ -143,9 +128,11 @@ merge: predict
 	  --odds $(ODDS_OUTDIR)/latest.csv \
 	  --out $(MERGED_OUT)
 
-site_home: merge
-	$(PY) scripts/build_edges_site.py --out $(DOCS_DIR)/index.html
-	touch $(DOCS_DIR)/.nojekyll
+.PHONY: site_home
+site_home:
+	@mkdir -p $(DOCS_DIR)
+	@touch $(DOCS_DIR)/.nojekyll
+	@echo "[site_home] using static $(DOCS_DIR)/index.html (not overwritten)"
 
 # ----------------------------------
 # All-props pipeline (new, unified)
@@ -214,11 +201,7 @@ props_now_pub:      ## build + publish (requires CONFIRM=LIVE)
 monday_all_pub:     ## full weekly run + publish (requires CONFIRM=LIVE)
 	@$(MAKE) monday_all PUBLISH=1 CONFIRM=LIVE
 
-build_top:
-	$(PY) scripts/build_top_picks.py \
-		--merged_csv $(MERGED_PROPS) \
-		--out $(TOP_HTML) \
-		--week $(WEEK)
+
 
 
 
@@ -270,3 +253,8 @@ clean:
 	rm -f $(PRED_OUT) $(MERGED_OUT) \
 	      $(PROPS_DIR)/params_week*.csv \
 	      $(PROPS_DIR)/props_with_model_week*.csv
+
+.PHONY: build_top
+	build_top: ## Build Top Picks page (cards/filters)
+	$(PY) scripts/build_top_picks.py --merged_csv $(TOP_MERGED) --out docs/props/top.html --title "Fourth & Value — Top Picks"
+	touch docs/.nojekyll
