@@ -1,3 +1,15 @@
+<header class="site-header">
+  <nav class="navbar">
+    <a class="brand" href="../index.html">Fourth &amp; Value 🏈</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <a class="nav-link" href="index.html">Props</a>
+      <a class="nav-link" href="consensus.html">Consensus</a>
+      <a class="nav-link" href="top.html">Top Picks</a>
+      <a class="nav-link" href="../methods.html">Methods</a>
+    </div>
+  </nav>
+</header>
 <!doctype html>
 <html lang="en">
 <head>
@@ -22,16 +34,24 @@ td.bet { color:#e3e3e6; }
 td.cons, td.edge { white-space:nowrap; }
 
 .note { margin:10px 0 16px; color:#b7b7bb; font-size:13px; }
+
+/* === NAV (injected) === */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(20,20,24,.65);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border,#2a2a2e)}
+.navbar{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:800;text-decoration:none;color:var(--text,#e9edf6)}
+.nav-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px}
+.nav-link{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;
+  text-decoration:none;color:var(--text,#e9edf6)}
+.nav-link:hover{background:var(--btn-hover,rgba(76,117,255,.14))}
+.nav-link.active{border:1px solid var(--accent,#4c74ff);background:rgba(76,117,255,.10)}
+@media (max-width:720px){.navbar{padding:8px 12px}.nav-links{gap:6px}}
+.nav-link:focus-visible{outline:2px solid var(--accent,#4c74ff);outline-offset:2px;border-radius:10px}
 </style>
 </head>
-<body>
-
 <header class="w-full sticky top-0 z-20 bg-neutral-900/85 backdrop-blur border-b border-neutral-800">
-  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-    <div class="text-xl font-black tracking-tight text-white">Fourth & Value</div>
-    <nav class="flex gap-1"><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/index.html">Home</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/index.html">Props</a><a class="font-semibold text-white px-3 py-2 rounded-lg" href="/props/consensus.html">Consensus</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/top.html">Top Picks</a></nav>
-  </div>
-</header>
+  </header>
 <script>
 (function() {
   try {
@@ -64,5 +84,16 @@ td.cons, td.edge { white-space:nowrap; }
     </table>
   </div>
 </main>
+<!-- auto-highlight current nav tab -->
+<script defer>
+(function(){
+  const here = location.pathname.replace(/\/+$/,'');
+  document.querySelectorAll('.nav-link').forEach(a=>{
+    const href = a.getAttribute('href'); if(!href) return;
+    const url = new URL(href, location.href);   // works under /user/repo/
+    if (url.pathname.replace(/\/+$/,'') === here) a.classList.add('active');
+  });
+})();
+</script>
 </body>
 </html>
