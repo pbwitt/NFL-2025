@@ -32,6 +32,23 @@ td.cons, td.edge { white-space:nowrap; }
     <nav class="flex gap-1"><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/index.html">Home</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/index.html">Props</a><a class="font-semibold text-white px-3 py-2 rounded-lg" href="/props/consensus.html">Consensus</a><a class="text-gray-300 hover:text-white px-3 py-2 rounded-lg" href="/props/top.html">Top Picks</a></nav>
   </div>
 </header>
+<script>
+(function() {
+  try {
+    var parts = location.pathname.split('/').filter(Boolean);
+    // project sites look like /<repo>/...; user/org sites don't need this
+    if (!parts.length) return;
+    var base = '/' + parts[0];  // '/NFL-2025'
+    // Only rewrite if link starts with '/' and isn't already prefixed
+    document.querySelectorAll('header nav a[href^="/"]').forEach(function(a) {
+      var href = a.getAttribute('href');
+      if (!href) return;
+      if (href.indexOf(base + '/') === 0) return;  // already has prefix
+      a.setAttribute('href', base + href);
+    });
+  } catch (e) {}
+})();
+</script>
 
 <main class="container">
   <div class="h1">Fourth &amp; Value — Consensus vs Best Book</div>

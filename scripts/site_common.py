@@ -26,18 +26,20 @@ def normalize_display(x) -> str:
 # ---------- Branding & Nav ----------
 BRAND = "Fourth & Value"
 
-NAV_LINKS = [
-    ("Home", "/index.html"),
-    ("Props", "/props/index.html"),
-    ("Consensus", "/props/consensus.html"),
-    ("Top Picks", "/props/top.html"),
-]
-
 def nav_html(active: str = "") -> str:
     def li(label, href, is_active):
         klass = "font-semibold text-white" if is_active else "text-gray-300 hover:text-white"
         return f'<a class="{klass} px-3 py-2 rounded-lg" href="{href}">{label}</a>'
+
+    NAV_LINKS = [
+        ("Home", "/index.html"),
+        ("Props", "/props/index.html"),
+        ("Consensus", "/props/consensus.html"),
+        ("Top Picks", "/props/top.html"),
+    ]
     items = "".join(li(lbl, href, active.lower()==lbl.lower()) for (lbl, href) in NAV_LINKS)
+
+    # JS shim: if we’re on a GitHub Pages project site, prefix links with '/<repo>'
     return f"""
 <header class="w-full sticky top-0 z-20 bg-neutral-900/85 backdrop-blur border-b border-neutral-800">
   <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -45,7 +47,25 @@ def nav_html(active: str = "") -> str:
     <nav class="flex gap-1">{items}</nav>
   </div>
 </header>
+<script>
+(function() {{
+  try {{
+    var parts = location.pathname.split('/').filter(Boolean);
+    // project sites look like /<repo>/...; user/org sites don't need this
+    if (!parts.length) return;
+    var base = '/' + parts[0];  // '/NFL-2025'
+    // Only rewrite if link starts with '/' and isn't already prefixed
+    document.querySelectorAll('header nav a[href^="/"]').forEach(function(a) {{
+      var href = a.getAttribute('href');
+      if (!href) return;
+      if (href.indexOf(base + '/') === 0) return;  // already has prefix
+      a.setAttribute('href', base + href);
+    }});
+  }} catch (e) {{}}
+}})();
+</script>
 """
+
 
 # ---------- Market labels ----------
 PRETTY_MAP = {
